@@ -1,10 +1,13 @@
+import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mypasar/model/config.dart';
 import 'package:mypasar/model/product.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:ndialog/ndialog.dart';
+import 'package:http/http.dart' as http;
 
 class PrDetailsPage extends StatefulWidget {
   final Product product;
@@ -66,7 +69,8 @@ class _PrDetailsPageState extends State<PrDetailsPage> {
       appBar: AppBar(
         title: const Text('Your Product Details'),
         actions: [
-          IconButton(onPressed: onPressed, icon: const Icon(Icons.edit))
+          IconButton(onPressed: _onDeletePr, icon: const Icon(Icons.delete)),
+          IconButton(onPressed: _onEditForm, icon: const Icon(Icons.edit))
         ],
       ),
       body: Center(
@@ -299,7 +303,7 @@ class _PrDetailsPageState extends State<PrDetailsPage> {
                                   fixedSize:
                                       Size(resWidth / 2, resWidth * 0.1)),
                               child: const Text('Update Product'),
-                              onPressed: () => {},
+                              onPressed: _updateProductDialog,
                             ),
                           ),
 
@@ -320,41 +324,43 @@ class _PrDetailsPageState extends State<PrDetailsPage> {
   }
 
   void _selectImage() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-            title: const Text(
-              "Select from",
-              style: TextStyle(),
-            ),
-            content: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      fixedSize: Size(resWidth * 0.2, resWidth * 0.2)),
-                  child: const Text('Gallery'),
-                  onPressed: () => {
-                    Navigator.of(context).pop(),
-                    _selectfromGallery(),
-                  },
-                ),
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      fixedSize: Size(resWidth * 0.2, resWidth * 0.2)),
-                  child: const Text('Camera'),
-                  onPressed: () => {
-                    Navigator.of(context).pop(),
-                    _selectFromCamera(),
-                  },
-                ),
-              ],
-            ));
-      },
-    );
+    if (editForm) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          // return object of type Dialog
+          return AlertDialog(
+              title: const Text(
+                "Select from",
+                style: TextStyle(),
+              ),
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        fixedSize: Size(resWidth * 0.2, resWidth * 0.2)),
+                    child: const Text('Gallery'),
+                    onPressed: () => {
+                      Navigator.of(context).pop(),
+                      _selectfromGallery(),
+                    },
+                  ),
+                  const SizedBox(width: 10),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        fixedSize: Size(resWidth * 0.2, resWidth * 0.2)),
+                    child: const Text('Camera'),
+                    onPressed: () => {
+                      Navigator.of(context).pop(),
+                      _selectFromCamera(),
+                    },
+                  ),
+                ],
+              ));
+        },
+      );
+    }
   }
 
   Future<void> _selectfromGallery() async {
@@ -410,7 +416,7 @@ class _PrDetailsPageState extends State<PrDetailsPage> {
     }
   }
 
-  void onPressed() {
+  void _onEditForm() {
     if (!editForm) {
       showDialog(
         context: context,
@@ -450,5 +456,197 @@ class _PrDetailsPageState extends State<PrDetailsPage> {
         },
       );
     }
+  }
+
+  void _updateProductDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          title: const Text(
+            "Update this product",
+            style: TextStyle(),
+          ),
+          content: const Text("Are you sure?", style: TextStyle()),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                "Yes",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _updateProduct();
+              },
+            ),
+            TextButton(
+              child: const Text(
+                "No",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _updateProduct() {
+    String _prname = _prnameEditingController.text;
+    String _prdesc = _prdescEditingController.text;
+    String _prprice = _prpriceEditingController.text;
+    String _prqty = _prqtyEditingController.text;
+    String _prdel = _prdelEditingController.text;
+    FocusScope.of(context).requestFocus(FocusNode());
+    FocusScope.of(context).unfocus();
+    ProgressDialog progressDialog = ProgressDialog(context,
+        message: const Text("Updating product.."),
+        title: const Text("Processing..."));
+    progressDialog.show();
+    if (_image == null) {
+      http.post(Uri.parse(Config.server + "/mypasar/php/update_product.php"),
+          body: {
+            "prid": widget.product.prid,
+            "prname": _prname,
+            "prdesc": _prdesc,
+            "prprice": _prprice,
+            "prqty": _prqty,
+            "prdel": _prdel,
+          }).then((response) {
+        print(response.body);
+        var data = jsonDecode(response.body);
+        if (response.statusCode == 200 && data['status'] == 'success') {
+          Fluttertoast.showToast(
+              msg: "Success",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              fontSize: 14.0);
+          progressDialog.dismiss();
+          Navigator.of(context).pop();
+          return;
+        } else {
+          Fluttertoast.showToast(
+              msg: "Failed",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              fontSize: 14.0);
+          progressDialog.dismiss();
+          return;
+        }
+      });
+    } else {
+      String base64Image = base64Encode(_image!.readAsBytesSync());
+      http.post(Uri.parse(Config.server + "/mypasar/php/update_product.php"),
+          body: {
+            "prid": widget.product.prid,
+            "prname": _prname,
+            "prdesc": _prdesc,
+            "prprice": _prprice,
+            "prqty": _prqty,
+            "prdel": _prdel,
+            "image": base64Image,
+          }).then((response) {
+        var data = jsonDecode(response.body);
+        if (response.statusCode == 200 && data['status'] == 'success') {
+          Fluttertoast.showToast(
+              msg: "Success",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              fontSize: 14.0);
+          progressDialog.dismiss();
+          Navigator.of(context).pop();
+          return;
+        } else {
+          Fluttertoast.showToast(
+              msg: "Failed",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              fontSize: 14.0);
+          progressDialog.dismiss();
+          return;
+        }
+      });
+    }
+    progressDialog.dismiss();
+  }
+
+  void _onDeletePr() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          title: const Text(
+            "Delete this product",
+            style: TextStyle(),
+          ),
+          content: const Text("Are you sure?", style: TextStyle()),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                "Yes",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _deleteProduct();
+              },
+            ),
+            TextButton(
+              child: const Text(
+                "No",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _deleteProduct() {
+    ProgressDialog progressDialog = ProgressDialog(context,
+        message: const Text("Deleting product.."),
+        title: const Text("Processing..."));
+    progressDialog.show();
+    http.post(Uri.parse(Config.server + "/mypasar/php/delete_product.php"),
+        body: {
+          "prid": widget.product.prid,
+        }).then((response) {
+      var data = jsonDecode(response.body);
+      if (response.statusCode == 200 && data['status'] == 'success') {
+        Fluttertoast.showToast(
+            msg: "Success",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            fontSize: 14.0);
+        progressDialog.dismiss();
+        Navigator.of(context).pop();
+        return;
+      } else {
+        Fluttertoast.showToast(
+            msg: "Failed",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            fontSize: 14.0);
+        progressDialog.dismiss();
+        return;
+      }
+    });
   }
 }

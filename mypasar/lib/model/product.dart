@@ -1,6 +1,7 @@
 
 class Product {
   String? prid;
+  String? pridowner;
   String? prname;
   String? prdesc;
   String? prprice;
@@ -15,6 +16,7 @@ class Product {
   Product(
       {required this.prid,
       required this.prname,
+      required this.pridowner,
       required this.prdesc,
       required this.prprice,
       required this.prqty,
@@ -28,6 +30,7 @@ class Product {
   Product.fromJson(Map<String, dynamic> json) {
     prid = json['prid'];
     prname = json['prname'];
+    pridowner = json['pridowner'];
     prdesc = json['prdesc'];
     prprice = json['prprice'];
     prqty = json['prqty'];
@@ -43,6 +46,7 @@ class Product {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['prid'] = prid;
     data['prname'] = prname;
+    data['pridowner'] = pridowner;
     data['prdesc'] = prdesc;
     data['prprice'] = prprice;
     data['prqty'] = prqty;

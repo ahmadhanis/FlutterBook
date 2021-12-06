@@ -26,7 +26,9 @@ class _TabPage2State extends State<TabPage2> {
   late double screenHeight, screenWidth, resWidth;
   final df = DateFormat('dd/MM/yyyy hh:mm a');
   late ScrollController _scrollController;
-  int scrollcount = 5, rowcount = 2;
+  int scrollcount = 10;
+  int rowcount = 2;
+  int numprd = 0;
 
   @override
   void initState() {
@@ -56,11 +58,12 @@ class _TabPage2State extends State<TabPage2> {
             : Column(
                 children: [
                   const Padding(
-                    padding: EdgeInsets.all(8.0),
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                     child: Text("Your Current Products",
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold)),
                   ),
+                  Text(numprd.toString() + " found"),
                   Expanded(
                     child: GridView.count(
                       crossAxisCount: rowcount,
@@ -163,7 +166,7 @@ class _TabPage2State extends State<TabPage2> {
         !_scrollController.position.outOfRange) {
       setState(() {
         if (productlist.length > scrollcount) {
-          scrollcount = scrollcount + 5;
+          scrollcount = scrollcount + 10;
           if (scrollcount > productlist.length) {
             scrollcount = productlist.length;
           }
@@ -195,6 +198,7 @@ class _TabPage2State extends State<TabPage2> {
         MaterialPageRoute(
             builder: (BuildContext context) =>
                 NewProductPage(user: widget.user)));
+    productlist = [];
     _loadProducts();
   }
 
@@ -212,6 +216,10 @@ class _TabPage2State extends State<TabPage2> {
         var extractdata = json.decode(response.body);
         setState(() {
           productlist = extractdata["products"];
+          numprd = productlist.length;
+          if (scrollcount >= productlist.length) {
+            scrollcount = productlist.length;
+          }
         });
       } else {
         setState(() {
@@ -233,7 +241,8 @@ class _TabPage2State extends State<TabPage2> {
         prloc: productlist[index]['prloc'],
         prlat: productlist[index]['prlat'],
         prlong: productlist[index]['prlong'],
-        prdate: productlist[index]['prdate']);
+        prdate: productlist[index]['prdate'],
+        pridowner: productlist[index]['pridowner']);
     await Navigator.push(
         context,
         MaterialPageRoute(
