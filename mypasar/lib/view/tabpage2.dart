@@ -167,7 +167,7 @@ class _TabPage2State extends State<TabPage2> {
       setState(() {
         if (productlist.length > scrollcount) {
           scrollcount = scrollcount + 10;
-          if (scrollcount > productlist.length) {
+          if (scrollcount >= productlist.length) {
             scrollcount = productlist.length;
           }
         }
