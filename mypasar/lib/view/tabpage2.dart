@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 
-import 'prdetailspage.dart';
+import 'prdetailsownerpage.dart';
 
 class TabPage2 extends StatefulWidget {
   final User user;
@@ -237,6 +237,8 @@ class _TabPage2State extends State<TabPage2> {
         prprice: productlist[index]['prprice'],
         prqty: productlist[index]['prqty'],
         prdel: productlist[index]['prdel'],
+        user_email: "",
+        user_name: "",
         prstate: productlist[index]['prstate'],
         prloc: productlist[index]['prloc'],
         prlat: productlist[index]['prlat'],
@@ -246,7 +248,7 @@ class _TabPage2State extends State<TabPage2> {
     await Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (BuildContext context) => PrDetailsPage(
+            builder: (BuildContext context) => PrDetailsOwnerPage(
                   product: product,
                 )));
     _loadProducts();

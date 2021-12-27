@@ -3,6 +3,8 @@ class Product {
   String? prid;
   String? pridowner;
   String? prname;
+  String? user_email;
+  String? user_name;
   String? prdesc;
   String? prprice;
   String? prqty;
@@ -18,6 +20,8 @@ class Product {
       required this.prname,
       required this.pridowner,
       required this.prdesc,
+      required this.user_email,
+      required this.user_name,
       required this.prprice,
       required this.prqty,
       required this.prdel,

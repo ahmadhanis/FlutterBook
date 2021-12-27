@@ -5,8 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
 import 'package:mypasar/model/config.dart';
+import 'package:mypasar/model/product.dart';
 import 'package:mypasar/model/user.dart';
 import 'package:http/http.dart' as http;
+
+import 'prdetailsownerpage.dart';
+import 'prdetailspage.dart';
 
 class TabPage1 extends StatefulWidget {
   final User user;
@@ -143,9 +147,10 @@ class _TabPage1State extends State<TabPage1> {
   void _loadBuyerProducts() {
     http.post(Uri.parse(Config.server + "/mypasar/php/loadbuyer_products.php"),
         body: {}).then((response) {
-      if (response.statusCode == 200 && response.body != "failed") {
+      var data = jsonDecode(response.body);
+      if (response.statusCode == 200 && data['status'] == 'success') {
         print(response.body);
-        var extractdata = json.decode(response.body);
+        var extractdata = data['data'];
         setState(() {
           productlist = extractdata["products"];
           numprd = productlist.length;
@@ -170,7 +175,29 @@ class _TabPage1State extends State<TabPage1> {
     }
   }
 
-  _prodDetails(int index) {}
+  _prodDetails(int index) {
+    Product product = Product(
+        prid: productlist[index]['prid'],
+        prname: productlist[index]['prname'],
+        prdesc: productlist[index]['prdesc'],
+        prprice: productlist[index]['prprice'],
+        prqty: productlist[index]['prqty'],
+        prdel: productlist[index]['prdel'],
+        prstate: productlist[index]['prstate'],
+        prloc: productlist[index]['prloc'],
+        prlat: productlist[index]['prlat'],
+        prlong: productlist[index]['prlong'],
+        prdate: productlist[index]['prdate'],
+        pridowner: productlist[index]['pridowner'],
+        user_email: productlist[index]['user_email'],
+        user_name: productlist[index]['user_name']);
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) => ProductDetailsPage(
+                  product: product,
+                )));
+  }
 
   _scrollListener() {
     if (_scrollController.offset >=
