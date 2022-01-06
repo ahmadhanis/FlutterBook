@@ -107,8 +107,6 @@ class _PrDetailsOwnerPageState extends State<PrDetailsOwnerPage> {
                       key: _formKey,
                       child: Column(
                         children: [
-                          //ute
-
                           const SizedBox(
                             height: 5,
                           ),
@@ -211,7 +209,6 @@ class _PrDetailsOwnerPageState extends State<PrDetailsOwnerPage> {
                               ),
                             ],
                           ),
-
                           Row(
                             children: [
                               Flexible(
@@ -306,7 +303,6 @@ class _PrDetailsOwnerPageState extends State<PrDetailsOwnerPage> {
                               onPressed: _updateProductDialog,
                             ),
                           ),
-
                           const SizedBox(
                             height: 15,
                           ),
@@ -457,6 +453,7 @@ class _PrDetailsOwnerPageState extends State<PrDetailsOwnerPage> {
       );
     }
   }
+  
 
   void _updateProductDialog() {
     showDialog(

@@ -193,6 +193,17 @@ class _TabPage2State extends State<TabPage2> {
           fontSize: 14.0);
       return;
     }
+    print(widget.user.phone);
+    if (widget.user.phone == "na") {
+      Fluttertoast.showToast(
+          msg: "Please add your phone number in the profile tab",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          textColor: Colors.red,
+          fontSize: 14.0);
+      return;
+    }
     await Navigator.push(
         context,
         MaterialPageRoute(
@@ -239,6 +250,7 @@ class _TabPage2State extends State<TabPage2> {
         prdel: productlist[index]['prdel'],
         user_email: "",
         user_name: "",
+        user_phone: "",
         prstate: productlist[index]['prstate'],
         prloc: productlist[index]['prloc'],
         prlat: productlist[index]['prlat'],

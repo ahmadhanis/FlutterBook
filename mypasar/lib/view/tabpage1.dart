@@ -8,8 +8,6 @@ import 'package:mypasar/model/config.dart';
 import 'package:mypasar/model/product.dart';
 import 'package:mypasar/model/user.dart';
 import 'package:http/http.dart' as http;
-
-import 'prdetailsownerpage.dart';
 import 'prdetailspage.dart';
 
 class TabPage1 extends StatefulWidget {
@@ -131,17 +129,18 @@ class _TabPage1State extends State<TabPage1> {
                   ),
                 ],
               ),
-        floatingActionButton: SpeedDial(
-          animatedIcon: AnimatedIcons.menu_close,
-          children: [
-            SpeedDialChild(
-                child: const Icon(Icons.add),
-                label: "New Product",
-                labelStyle: const TextStyle(color: Colors.black),
-                labelBackgroundColor: Colors.white,
-                onTap: null),
-          ],
-        ));
+        // floatingActionButton: SpeedDial(
+        //   animatedIcon: AnimatedIcons.menu_close,
+        //   children: [
+        //     SpeedDialChild(
+        //         child: const Icon(Icons.add),
+        //         label: "New Product",
+        //         labelStyle: const TextStyle(color: Colors.black),
+        //         labelBackgroundColor: Colors.white,
+        //         onTap: null),
+        //   ],
+        // )
+        );
   }
 
   void _loadBuyerProducts() {
@@ -190,7 +189,8 @@ class _TabPage1State extends State<TabPage1> {
         prdate: productlist[index]['prdate'],
         pridowner: productlist[index]['pridowner'],
         user_email: productlist[index]['user_email'],
-        user_name: productlist[index]['user_name']);
+        user_name: productlist[index]['user_name'],
+        user_phone: productlist[index]['user_phone']);
     Navigator.push(
         context,
         MaterialPageRoute(
