@@ -1,10 +1,12 @@
-import 'dart:io';
+import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mypasar/model/config.dart';
 import 'package:mypasar/model/product.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'dart:async';
 
 class ProductDetailsPage extends StatefulWidget {
   final Product product;
@@ -43,7 +45,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                   child: CachedNetworkImage(
                     width: screenWidth,
                     fit: BoxFit.cover,
-                    imageUrl: Config.server +
+                    imageUrl: MyConfig.server +
                         "/mypasar/images/products/" +
                         widget.product.prid.toString() +
                         ".png",
@@ -180,7 +182,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   void _onCallDialog(int r) {
     switch (r) {
       case 1:
-      _makePhoneCall(widget.product.user_phone.toString());
+        _makePhoneCall(widget.product.user_phone.toString());
         break;
       case 2:
         print('2!');
@@ -194,6 +196,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
         break;
       case 5:
         print('5');
+        _showMapDialogue();
         break;
       default:
         print('choose a different number!');
@@ -201,19 +204,86 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   }
 
   Future<void> _makePhoneCall(String phoneNumber) async {
- 
     final Uri launchUri = Uri(
       scheme: 'phone',
       path: phoneNumber,
     );
     await launch(launchUri.toString());
   }
-    Future<void> _sendSms(String phoneNumber) async {
- 
+
+  Future<void> _sendSms(String phoneNumber) async {
     final Uri launchUri = Uri(
       scheme: 'sms',
       path: phoneNumber,
     );
     await launch(launchUri.toString());
+  }
+
+  int generateIds() {
+    var rng = Random();
+    int randomInt;
+    randomInt = rng.nextInt(100);
+    return randomInt;
+  }
+
+  void _showMapDialogue() {
+    Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
+    Completer<GoogleMapController> _controller = Completer();
+    CameraPosition prlocation = CameraPosition(
+      target: LatLng(double.parse(widget.product.prlat.toString()),
+          double.parse(widget.product.prlong.toString())),
+      zoom: 15.4746,
+    );
+
+    int markerIdVal = generateIds();
+    MarkerId markerId = MarkerId(markerIdVal.toString());
+    final Marker marker = Marker(
+        markerId: markerId,
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+        position: LatLng(
+          double.parse(widget.product.prlat.toString()),
+          double.parse(widget.product.prlong.toString()),
+        ),
+        infoWindow: InfoWindow(
+          title: widget.product.prname.toString(),
+        ));
+    markers[markerId] = marker;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          title: const Text(
+            "Location",
+            style: TextStyle(),
+          ),
+          content: Container(
+            height: screenHeight / 2,
+            child: GoogleMap(
+              mapType: MapType.normal,
+              initialCameraPosition: prlocation,
+              myLocationEnabled: true,
+              markers: Set<Marker>.of(markers.values),
+              onMapCreated: (GoogleMapController controller) {
+                _controller.complete(controller);
+              },
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                "Close",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

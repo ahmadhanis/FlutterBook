@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -54,7 +55,7 @@ class _TabPage3State extends State<TabPage3> {
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                               child: CachedNetworkImage(
-                                imageUrl: Config.server +
+                                imageUrl: MyConfig.server +
                                     "/mypasar/images/profiles/" +
                                     widget.user.id.toString() +
                                     ".png",
@@ -384,7 +385,7 @@ class _TabPage3State extends State<TabPage3> {
     if (croppedFile != null) {
       _image = croppedFile;
       String base64Image = base64Encode(_image!.readAsBytesSync());
-      http.post(Uri.parse(Config.server + "/mypasar/php/update_profile.php"),
+      http.post(Uri.parse(MyConfig.server + "/mypasar/php/update_profile.php"),
           body: {
             "image": base64Image,
             "userid": widget.user.id
@@ -398,6 +399,10 @@ class _TabPage3State extends State<TabPage3> {
               timeInSecForIosWeb: 1,
               textColor: Colors.green,
               fontSize: 14.0);
+          DefaultCacheManager manager = DefaultCacheManager();
+          manager.emptyCache();
+          _image = null;
+          setState(() {});
         } else {
           Fluttertoast.showToast(
               msg: "Failed",
@@ -408,7 +413,7 @@ class _TabPage3State extends State<TabPage3> {
               fontSize: 14.0);
         }
       });
-      setState(() {});
+      
     }
   }
 
@@ -434,7 +439,7 @@ class _TabPage3State extends State<TabPage3> {
       builder: (BuildContext context) {
         return AlertDialog(
           shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
           title: const Text(
             "Name",
             style: TextStyle(),
@@ -452,7 +457,7 @@ class _TabPage3State extends State<TabPage3> {
                 Navigator.of(context).pop();
                 http.post(
                     Uri.parse(
-                        Config.server + "/mypasar/php/update_profile.php"),
+                        MyConfig.server + "/mypasar/php/update_profile.php"),
                     body: {
                       "name": _nameeditingController.text,
                       "userid": widget.user.id
@@ -524,7 +529,7 @@ class _TabPage3State extends State<TabPage3> {
                 Navigator.of(context).pop();
                 http.post(
                     Uri.parse(
-                        Config.server + "/mypasar/php/update_profile.php"),
+                        MyConfig.server + "/mypasar/php/update_profile.php"),
                     body: {
                       "phone": _phoneeditingController.text,
                       "userid": widget.user.id
@@ -649,7 +654,7 @@ class _TabPage3State extends State<TabPage3> {
                 Navigator.of(context).pop();
                 http.post(
                     Uri.parse(
-                        Config.server + "/mypasar/php/update_profile.php"),
+                        MyConfig.server + "/mypasar/php/update_profile.php"),
                     body: {
                       "password": _pass1editingController.text,
                       "userid": widget.user.id

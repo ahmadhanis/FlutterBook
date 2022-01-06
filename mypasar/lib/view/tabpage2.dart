@@ -79,7 +79,7 @@ class _TabPage2State extends State<TabPage2> {
                                 child: CachedNetworkImage(
                                   width: screenWidth,
                                   fit: BoxFit.cover,
-                                  imageUrl: Config.server +
+                                  imageUrl: MyConfig.server +
                                       "/mypasar/images/products/" +
                                       productlist[index]['prid'] +
                                       ".png",
@@ -220,7 +220,7 @@ class _TabPage2State extends State<TabPage2> {
       });
       return;
     }
-    http.post(Uri.parse(Config.server + "/mypasar/php/load_products.php"),
+    http.post(Uri.parse(MyConfig.server + "/mypasar/php/load_products.php"),
         body: {"userid": widget.user.id}).then((response) {
       if (response.statusCode == 200 && response.body != "failed") {
         print(response.body);

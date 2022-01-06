@@ -57,7 +57,7 @@ class SplashPageState extends State<SplashPage> {
     String password = (prefs.getString('pass')) ?? '';
     late User user;
     if (email.length > 1 && password.length > 1) {
-      http.post(Uri.parse(Config.server + "/mypasar/php/login_user.php"),
+      http.post(Uri.parse(MyConfig.server + "/mypasar/php/login_user.php"),
           body: {"email": email, "password": password}).then((response) {
         if (response.statusCode == 200 && response.body != "failed") {
           final jsonResponse = json.decode(response.body);

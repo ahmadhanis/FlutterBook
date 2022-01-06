@@ -78,7 +78,7 @@ class _TabPage1State extends State<TabPage1> {
                                 child: CachedNetworkImage(
                                   width: screenWidth,
                                   fit: BoxFit.cover,
-                                  imageUrl: Config.server +
+                                  imageUrl: MyConfig.server +
                                       "/mypasar/images/products/" +
                                       productlist[index]['prid'] +
                                       ".png",
@@ -144,7 +144,7 @@ class _TabPage1State extends State<TabPage1> {
   }
 
   void _loadBuyerProducts() {
-    http.post(Uri.parse(Config.server + "/mypasar/php/loadbuyer_products.php"),
+    http.post(Uri.parse(MyConfig.server + "/mypasar/php/loadbuyer_products.php"),
         body: {}).then((response) {
       var data = jsonDecode(response.body);
       if (response.statusCode == 200 && data['status'] == 'success') {

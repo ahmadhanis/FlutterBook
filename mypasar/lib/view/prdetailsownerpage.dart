@@ -89,7 +89,7 @@ class _PrDetailsOwnerPageState extends State<PrDetailsOwnerPage> {
                             decoration: BoxDecoration(
                           image: DecorationImage(
                             image: _image == null
-                                ? NetworkImage(Config.server +
+                                ? NetworkImage(MyConfig.server +
                                     "/mypasar/images/products/" +
                                     widget.product.prid.toString() +
                                     ".png")
@@ -506,7 +506,7 @@ class _PrDetailsOwnerPageState extends State<PrDetailsOwnerPage> {
         title: const Text("Processing..."));
     progressDialog.show();
     if (_image == null) {
-      http.post(Uri.parse(Config.server + "/mypasar/php/update_product.php"),
+      http.post(Uri.parse(MyConfig.server + "/mypasar/php/update_product.php"),
           body: {
             "prid": widget.product.prid,
             "prname": _prname,
@@ -540,7 +540,7 @@ class _PrDetailsOwnerPageState extends State<PrDetailsOwnerPage> {
       });
     } else {
       String base64Image = base64Encode(_image!.readAsBytesSync());
-      http.post(Uri.parse(Config.server + "/mypasar/php/update_product.php"),
+      http.post(Uri.parse(MyConfig.server + "/mypasar/php/update_product.php"),
           body: {
             "prid": widget.product.prid,
             "prname": _prname,
@@ -619,7 +619,7 @@ class _PrDetailsOwnerPageState extends State<PrDetailsOwnerPage> {
         message: const Text("Deleting product.."),
         title: const Text("Processing..."));
     progressDialog.show();
-    http.post(Uri.parse(Config.server + "/mypasar/php/delete_product.php"),
+    http.post(Uri.parse(MyConfig.server + "/mypasar/php/delete_product.php"),
         body: {
           "prid": widget.product.prid,
         }).then((response) {

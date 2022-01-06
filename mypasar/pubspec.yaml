@@ -31,10 +31,12 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
+  flutter_cache_manager: ^3.3.0
   flutter_speed_dial: ^4.4.0+2
   fluttertoast: ^8.0.8
   geocoding: ^2.0.1
   geolocator: ^7.7.1
+  google_maps_flutter: ^2.1.1
   http: ^0.13.4
   image_cropper: ^1.4.1
   image_picker: ^0.8.4+3
