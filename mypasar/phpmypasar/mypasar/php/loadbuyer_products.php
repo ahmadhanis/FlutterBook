@@ -1,7 +1,6 @@
 <?php
 include_once("dbconnect.php");
 
-//$sqlloadproduct = "SELECT * FROM tbl_products ORDER BY prdate DESC";
 $sqlloadproduct = "SELECT * FROM tbl_products INNER JOIN tbl_users ON tbl_products.pridowner = tbl_users.user_id ORDER BY tbl_products.prdate DESC";
 
 $result = $conn->query($sqlloadproduct);
@@ -14,6 +13,7 @@ while ($row = $result->fetch_assoc()) {
         $prlist['pridowner'] = $row['pridowner'];
         $prlist['user_name'] = $row['user_name'];
         $prlist['user_email'] = $row['user_email'];
+        $prlist['user_phone'] = $row['user_phone'];
         $prlist['prdesc'] = $row['prdesc'];
         $prlist['prprice'] = $row['prprice'];
         $prlist['prqty'] = $row['prqty'];
