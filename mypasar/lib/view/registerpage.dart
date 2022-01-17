@@ -417,7 +417,7 @@ class _RegisterPageState extends State<RegisterPage> {
         title: const Text("Registering..."));
     progressDialog.show();
 
-    http.post(Uri.parse(MyConfig.server + "/mypasar/php/register_user.php"),
+    http.post(Uri.parse(MyConfig.server + "/php/register_user.php"),
         body: {
           "name": _name,
           "email": _email,

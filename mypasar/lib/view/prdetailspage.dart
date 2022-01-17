@@ -46,7 +46,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     width: screenWidth,
                     fit: BoxFit.cover,
                     imageUrl: MyConfig.server +
-                        "/mypasar/images/products/" +
+                        "/images/products/" +
                         widget.product.prid.toString() +
                         ".png",
                     placeholder: (context, url) =>

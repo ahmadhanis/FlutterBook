@@ -80,7 +80,7 @@ class _TabPage2State extends State<TabPage2> {
                                   width: screenWidth,
                                   fit: BoxFit.cover,
                                   imageUrl: MyConfig.server +
-                                      "/mypasar/images/products/" +
+                                      "/images/products/" +
                                       productlist[index]['prid'] +
                                       ".png",
                                   placeholder: (context, url) =>
@@ -220,11 +220,13 @@ class _TabPage2State extends State<TabPage2> {
       });
       return;
     }
-    http.post(Uri.parse(MyConfig.server + "/mypasar/php/load_products.php"),
+    http.post(Uri.parse(MyConfig.server + "/php/load_products.php"),
         body: {"userid": widget.user.id}).then((response) {
-      if (response.statusCode == 200 && response.body != "failed") {
+      var data = jsonDecode(response.body);
+      print(data);
+      if (response.statusCode == 200 && data['status'] == 'success') {
         print(response.body);
-        var extractdata = json.decode(response.body);
+        var extractdata = data['data'];
         setState(() {
           productlist = extractdata["products"];
           numprd = productlist.length;

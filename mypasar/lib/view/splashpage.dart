@@ -57,7 +57,7 @@ class SplashPageState extends State<SplashPage> {
     String password = (prefs.getString('pass')) ?? '';
     late User user;
     if (email.length > 1 && password.length > 1) {
-      http.post(Uri.parse(MyConfig.server + "/mypasar/php/login_user.php"),
+      http.post(Uri.parse(MyConfig.server + "/php/login_user.php"),
           body: {"email": email, "password": password}).then((response) {
         if (response.statusCode == 200 && response.body != "failed") {
           final jsonResponse = json.decode(response.body);
@@ -76,7 +76,7 @@ class SplashPageState extends State<SplashPage> {
               phone: "na",
               address: "na",
               regdate: "na",
-              otp: "na");
+              otp: "na", credit: 'na');
           Timer(
               const Duration(seconds: 3),
               () => Navigator.pushReplacement(
@@ -93,7 +93,7 @@ class SplashPageState extends State<SplashPage> {
           phone: "na",
           address: "na",
           regdate: "na",
-          otp: "na");
+          otp: "na", credit: '');
       Timer(
           const Duration(seconds: 3),
           () => Navigator.pushReplacement(context,

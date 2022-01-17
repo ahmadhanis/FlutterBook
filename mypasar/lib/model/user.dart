@@ -6,6 +6,7 @@ class User {
   String? address;
   String? regdate;
   String? otp;
+  String? credit;
 
   User(
       {required this.id,
@@ -14,7 +15,9 @@ class User {
       required this.phone,
       required this.address,
       required this.regdate,
-      required this.otp});
+      required this.otp,
+      required this.credit
+      });
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -24,5 +27,6 @@ class User {
     address = json['address'];
     regdate = json['regdate'];
     otp = json['otp'];
+    credit = json['credit'];
   }
 }

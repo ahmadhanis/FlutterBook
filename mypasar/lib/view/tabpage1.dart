@@ -79,7 +79,7 @@ class _TabPage1State extends State<TabPage1> {
                                   width: screenWidth,
                                   fit: BoxFit.cover,
                                   imageUrl: MyConfig.server +
-                                      "/mypasar/images/products/" +
+                                      "/images/products/" +
                                       productlist[index]['prid'] +
                                       ".png",
                                   placeholder: (context, url) =>
@@ -144,7 +144,7 @@ class _TabPage1State extends State<TabPage1> {
   }
 
   void _loadBuyerProducts() {
-    http.post(Uri.parse(MyConfig.server + "/mypasar/php/loadbuyer_products.php"),
+    http.post(Uri.parse(MyConfig.server + "/php/loadbuyer_products.php"),
         body: {}).then((response) {
       var data = jsonDecode(response.body);
       if (response.statusCode == 200 && data['status'] == 'success') {

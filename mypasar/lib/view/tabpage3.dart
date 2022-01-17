@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:mypasar/model/config.dart';
 import 'package:mypasar/model/user.dart';
 import 'package:mypasar/view/loginpage.dart';
+import 'creditpage.dart';
 import 'registerpage.dart';
 import 'package:http/http.dart' as http;
 
@@ -56,7 +57,7 @@ class _TabPage3State extends State<TabPage3> {
                               padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                               child: CachedNetworkImage(
                                 imageUrl: MyConfig.server +
-                                    "/mypasar/images/profiles/" +
+                                    "/images/profiles/" +
                                     widget.user.id.toString() +
                                     ".png",
                                 placeholder: (context, url) =>
@@ -124,10 +125,19 @@ class _TabPage3State extends State<TabPage3> {
                                 Text(widget.user.phone.toString()),
                               ]),
                               TableRow(children: [
-                                const Icon(Icons.date_range),
-                                Text(df.format(DateTime.parse(
-                                    widget.user.regdate.toString()))),
+                                const Icon(Icons.credit_score),
+                                Text(widget.user.credit.toString()),
                               ]),
+                              widget.user.regdate.toString() == ""
+                                  ? TableRow(children: [
+                                      const Icon(Icons.date_range),
+                                      Text(df.format(DateTime.parse(
+                                          widget.user.regdate.toString())))
+                                    ])
+                                  : TableRow(children: [
+                                      const Icon(Icons.date_range),
+                                      Text(widget.user.regdate.toString())
+                                    ]),
                             ],
                           ),
                         ],
@@ -191,9 +201,9 @@ class _TabPage3State extends State<TabPage3> {
                         const Divider(
                           height: 2,
                         ),
-                        const MaterialButton(
-                          onPressed: null,
-                          child: Text("BUY CREDIT"),
+                        MaterialButton(
+                          onPressed: buyCreditPage,
+                          child: const Text("BUY CREDIT"),
                         ),
                         const Divider(
                           height: 2,
@@ -385,11 +395,10 @@ class _TabPage3State extends State<TabPage3> {
     if (croppedFile != null) {
       _image = croppedFile;
       String base64Image = base64Encode(_image!.readAsBytesSync());
-      http.post(Uri.parse(MyConfig.server + "/mypasar/php/update_profile.php"),
-          body: {
-            "image": base64Image,
-            "userid": widget.user.id
-          }).then((response) {
+      http.post(Uri.parse(MyConfig.server + "/php/update_profile.php"), body: {
+        "image": base64Image,
+        "userid": widget.user.id
+      }).then((response) {
         var data = jsonDecode(response.body);
         if (response.statusCode == 200 && data['status'] == 'success') {
           Fluttertoast.showToast(
@@ -413,7 +422,6 @@ class _TabPage3State extends State<TabPage3> {
               fontSize: 14.0);
         }
       });
-      
     }
   }
 
@@ -456,8 +464,7 @@ class _TabPage3State extends State<TabPage3> {
               onPressed: () {
                 Navigator.of(context).pop();
                 http.post(
-                    Uri.parse(
-                        MyConfig.server + "/mypasar/php/update_profile.php"),
+                    Uri.parse(MyConfig.server + "/php/update_profile.php"),
                     body: {
                       "name": _nameeditingController.text,
                       "userid": widget.user.id
@@ -528,8 +535,7 @@ class _TabPage3State extends State<TabPage3> {
               onPressed: () {
                 Navigator.of(context).pop();
                 http.post(
-                    Uri.parse(
-                        MyConfig.server + "/mypasar/php/update_profile.php"),
+                    Uri.parse(MyConfig.server + "/php/update_profile.php"),
                     body: {
                       "phone": _phoneeditingController.text,
                       "userid": widget.user.id
@@ -653,8 +659,7 @@ class _TabPage3State extends State<TabPage3> {
                 }
                 Navigator.of(context).pop();
                 http.post(
-                    Uri.parse(
-                        MyConfig.server + "/mypasar/php/update_profile.php"),
+                    Uri.parse(MyConfig.server + "/php/update_profile.php"),
                     body: {
                       "password": _pass1editingController.text,
                       "userid": widget.user.id
@@ -695,5 +700,14 @@ class _TabPage3State extends State<TabPage3> {
         );
       },
     );
+  }
+
+  Future<void> buyCreditPage() async {
+   await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) => CreditPage(
+                  user: widget.user,
+                )));
   }
 }
