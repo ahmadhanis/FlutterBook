@@ -44,6 +44,7 @@ dependencies:
   ndialog: ^4.1.0
   shared_preferences: ^2.0.8
   url_launcher: ^6.0.17
+  webview_flutter: ^3.0.0
 
 dev_dependencies:
   flutter_lints: ^1.0.0

@@ -42,8 +42,8 @@ class _TabPage3State extends State<TabPage3> {
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Flexible(
-              flex: 4,
+          child: Container(
+              height: screenHeight * 0.25,
               child: Row(
                 children: [
                   _image == null
@@ -71,8 +71,8 @@ class _TabPage3State extends State<TabPage3> {
                             ),
                           )),
                         )
-                      : Flexible(
-                          flex: 4,
+                      : Container(
+                          height: screenHeight * 0.25,
                           child: SizedBox(
                               // height: screenWidth / 2.5,
                               child: GestureDetector(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mypasar/model/user.dart';
+import 'billpage.dart';
 
 class CreditPage extends StatefulWidget {
   final User user;
@@ -38,7 +39,7 @@ class _CreditPageState extends State<CreditPage> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
               child: Card(
                 elevation: 10,
                 child: Container(
@@ -96,56 +97,63 @@ class _CreditPageState extends State<CreditPage> {
               ),
             ),
             Padding(
-                padding: const EdgeInsets.all(8),
-                child: Container(
-                  height: screenHeight * 0.55,
-                  child: Column(
-                    children: [
-                      const Text("BUY CREDIT",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 20),
-                      const Text("Select Credit Value "),
-                      SizedBox(
-                        height: 60,
-                        child: DropdownButton(
-                          //sorting dropdownoption
-                          hint: const Text(
-                            'Please select credit value',
+                padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
+                child: Card(
+                  elevation: 10,
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    width: screenWidth,
+                    height: screenHeight * 0.35,
+                    child: Column(
+                      children: [
+                        const Text("BUY CREDIT",
                             style: TextStyle(
-                              color: Color.fromRGBO(101, 255, 218, 50),
-                            ),
-                          ), // Not necessary for Option 1
-                          value: selectedValue,
-                          onChanged: (newValue) {
-                            setState(() {
-                              selectedValue = newValue.toString();
+                                fontSize: 18, fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 20),
+                        const Text("Select Credit Value "),
+                        SizedBox(
+                          height: 60,
+                          width: 100,
+                          child: DropdownButton(
+                            isExpanded: true,
+                            //sorting dropdownoption
+                            hint: const Text(
+                              'Please select credit value',
+                              style: TextStyle(
+                                color: Color.fromRGBO(101, 255, 218, 50),
+                              ),
+                            ), // Not necessary for Option 1
+                            value: selectedValue,
+                            onChanged: (newValue) {
+                              setState(() {
+                                selectedValue = newValue.toString();
 
-                              print(selectedValue);
-                            });
-                          },
-                          items: creditType.map((selectedUser) {
-                            return DropdownMenuItem(
-                              child: Text(selectedUser, style: TextStyle()),
-                              value: selectedUser,
-                            );
-                          }).toList(),
+                                print(selectedValue);
+                              });
+                            },
+                            items: creditType.map((selectedValue) {
+                              return DropdownMenuItem(
+                                child: Text(selectedValue, style: TextStyle()),
+                                value: selectedValue,
+                              );
+                            }).toList(),
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                          "RM " +
-                              double.parse(selectedValue).toStringAsFixed(2),
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 10),
-                      ElevatedButton(
-                        child: Text("BUY"),
-                        onPressed: _buycreditDialog,
-                        style: ElevatedButton.styleFrom(
-                            fixedSize: Size(screenWidth / 2, 50)),
-                      ),
-                    ],
+                        const SizedBox(height: 10),
+                        Text(
+                            "RM " +
+                                double.parse(selectedValue).toStringAsFixed(2),
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 10),
+                        ElevatedButton(
+                          child: Text("BUY"),
+                          onPressed: _buycreditDialog,
+                          style: ElevatedButton.styleFrom(
+                              fixedSize: Size(screenWidth / 2, 50)),
+                        ),
+                      ],
+                    ),
                   ),
                 ))
           ],
@@ -176,6 +184,14 @@ class _CreditPageState extends State<CreditPage> {
               ),
               onPressed: () {
                 Navigator.of(context).pop();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => BillPage(
+                              user: widget.user,
+                              credit: int.parse(selectedValue),
+                              usercredit: widget.user.credit.toString(),
+                            )));
               },
             ),
             TextButton(

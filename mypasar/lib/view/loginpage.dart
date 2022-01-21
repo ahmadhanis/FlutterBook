@@ -235,6 +235,7 @@ class _LoginPageState extends State<LoginPage> {
     ProgressDialog progressDialog = ProgressDialog(context,
         message: const Text("Please wait.."), title: const Text("Login user"));
     progressDialog.show();
+    
     String _email = _emailditingController.text;
     String _pass = _passEditingController.text;
     http.post(Uri.parse(MyConfig.server + "/php/login_user.php"),

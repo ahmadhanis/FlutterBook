@@ -54,7 +54,6 @@ function databaseUpdate($sql){
         $response = array('status' => 'failed', 'data' => null);
         sendJsonResponse($response);
     }
-    
 }
 
 function sendJsonResponse($sentArray)

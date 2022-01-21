@@ -4,7 +4,7 @@ $userid = $_POST['userid'];
 $sqlloadproduct = "SELECT * FROM tbl_products WHERE pridowner = '$userid' ORDER BY prdate DESC";
 $result = $conn->query($sqlloadproduct);
 if ($result->num_rows > 0) {
-    $response["products"] = array();
+     $products["products"] = array();
 while ($row = $result->fetch_assoc()) {
         $prlist = array();
         $prlist['prid'] = $row['prid'];
@@ -19,9 +19,19 @@ while ($row = $result->fetch_assoc()) {
         $prlist['prlat'] = $row['prlat'];
         $prlist['prlong'] = $row['prlong'];
         $prlist['prdate'] = $row['prdate'];
-        array_push($response["products"],$prlist);
+        array_push($products["products"],$prlist);
     }
-    echo json_encode($response);
+     $response = array('status' => 'success', 'data' => $products);
+    sendJsonResponse($response);
 }else{
-    echo "nodata";
+    $response = array('status' => 'failed', 'data' => null);
+    sendJsonResponse($response);
 }
+
+function sendJsonResponse($sentArray)
+{
+    header('Content-Type: application/json');
+    echo json_encode($sentArray);
+}
+
+?>
