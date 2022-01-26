@@ -7,8 +7,8 @@ $name = $_GET['name'];
 $amount = $_GET['amount']; 
 $curcredit = $_GET['curcredit'];
 
-$api_key = 'your-api-key';
-$collection_id = 'your-bill-id';
+$api_key = '';
+$collection_id = '';
 $host = 'https://billplz-staging.herokuapp.com/api/v3/bills';
 
 

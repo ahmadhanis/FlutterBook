@@ -47,12 +47,12 @@ function sendEmail($email,$otp)
     $mail->isSMTP();                                                    //Send using SMTP
     $mail->Host       = 'mail.slumberjer.com';                          //Set the SMTP server to send through
     $mail->SMTPAuth   = true;                                           //Enable SMTP authentication
-    $mail->Username   = 'slumbersoft@slumberjer.com';  
-    $mail->Password   = 'T0MizfNmCddW';
+    $mail->Username   = '';  
+    $mail->Password   = '';
     $mail->SMTPSecure = 'tls';         
     $mail->Port       = 587;
     
-    $from = "slumbersoft@slumberjer.com";
+    $from = "";
     $to = $email;
     $subject = 'MyPasar - Please verify your account';
     $message = "<h2>Welcome to MyPasar App</h2> <p>Thank you for registering your account with MyPasar. To complete your registration please click the following.<p>

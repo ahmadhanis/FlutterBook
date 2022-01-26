@@ -379,9 +379,10 @@ class _NewProductPageState extends State<NewProductPage> {
                 "Yes",
                 style: TextStyle(),
               ),
-              onPressed: () {
+              onPressed: ()  async {
                 Navigator.of(context).pop();
-                _addNewProduct();
+                await _addNewProduct();
+                _loadNewCredit();
               },
             ),
             TextButton(
@@ -399,7 +400,7 @@ class _NewProductPageState extends State<NewProductPage> {
     );
   }
 
-  void _addNewProduct() {
+   _addNewProduct() {
     String _prname = _prnameEditingController.text;
     String _prdesc = _prdescEditingController.text;
     String _prprice = _prpriceEditingController.text;
@@ -418,6 +419,7 @@ class _NewProductPageState extends State<NewProductPage> {
     String base64Image = base64Encode(_image!.readAsBytesSync());
     http.post(Uri.parse(MyConfig.server + "/php/new_product.php"), body: {
       "pridowner": widget.user.id,
+      "premail" : widget.user.email,
       "prname": _prname,
       "prdesc": _prdesc,
       "prprice": _prprice,
@@ -544,4 +546,19 @@ class _NewProductPageState extends State<NewProductPage> {
       prlong = _currentPosition.longitude.toString();
     });
   }
+
+  _loadNewCredit() {
+    http.post(Uri.parse(MyConfig.server + "/php/load_user.php"),
+        body: {"email": widget.user.email}).then((response) {
+      if (response.statusCode == 200 && response.body != "failed") {
+        final jsonResponse = json.decode(response.body);
+        print(response.body);
+        User user = User.fromJson(jsonResponse);
+        setState(() {
+          widget.user.credit = user.credit;
+        });
+      }
+    });
+  }
+
 }

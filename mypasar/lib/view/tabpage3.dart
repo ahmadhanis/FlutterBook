@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -42,7 +41,7 @@ class _TabPage3State extends State<TabPage3> {
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Container(
+          child: SizedBox(
               height: screenHeight * 0.25,
               child: Row(
                 children: [
@@ -71,7 +70,7 @@ class _TabPage3State extends State<TabPage3> {
                             ),
                           )),
                         )
-                      : Container(
+                      : SizedBox(
                           height: screenHeight * 0.25,
                           child: SizedBox(
                               // height: screenWidth / 2.5,
@@ -595,7 +594,7 @@ class _TabPage3State extends State<TabPage3> {
             "Update Password",
             style: TextStyle(),
           ),
-          content: Container(
+          content: SizedBox(
             height: screenHeight / 5,
             child: Column(
               children: [
@@ -703,11 +702,26 @@ class _TabPage3State extends State<TabPage3> {
   }
 
   Future<void> buyCreditPage() async {
-   await Navigator.push(
+    await Navigator.push(
         context,
         MaterialPageRoute(
             builder: (BuildContext context) => CreditPage(
                   user: widget.user,
                 )));
+                _loadNewCredit();
+  }
+
+  _loadNewCredit() {
+    http.post(Uri.parse(MyConfig.server + "/php/load_user.php"),
+        body: {"email": widget.user.email}).then((response) {
+      if (response.statusCode == 200 && response.body != "failed") {
+        final jsonResponse = json.decode(response.body);
+        print(response.body);
+        User user = User.fromJson(jsonResponse);
+        setState(() {
+          widget.user.credit = user.credit;
+        });
+      }
+    });
   }
 }

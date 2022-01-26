@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mypasar/model/config.dart';
 import 'package:mypasar/model/user.dart';
 import 'billpage.dart';
+import 'package:http/http.dart' as http;
 
 class CreditPage extends StatefulWidget {
   final User user;
@@ -182,9 +186,9 @@ class _CreditPageState extends State<CreditPage> {
                 "Yes",
                 style: TextStyle(),
               ),
-              onPressed: () {
+              onPressed: () async {
                 Navigator.of(context).pop();
-                Navigator.push(
+                await Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (BuildContext context) => BillPage(
@@ -192,6 +196,7 @@ class _CreditPageState extends State<CreditPage> {
                               credit: int.parse(selectedValue),
                               usercredit: widget.user.credit.toString(),
                             )));
+                _loadNewCredit();
               },
             ),
             TextButton(
@@ -207,5 +212,19 @@ class _CreditPageState extends State<CreditPage> {
         );
       },
     );
+  }
+
+  _loadNewCredit() {
+    http.post(Uri.parse(MyConfig.server + "/php/load_user.php"),
+        body: {"email": widget.user.email}).then((response) {
+      if (response.statusCode == 200 && response.body != "failed") {
+        final jsonResponse = json.decode(response.body);
+        print(response.body);
+        User user = User.fromJson(jsonResponse);
+        setState(() {
+          widget.user.credit = user.credit;
+        });
+      }
+    });
   }
 }

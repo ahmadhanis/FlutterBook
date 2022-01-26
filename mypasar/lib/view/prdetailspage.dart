@@ -259,7 +259,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             "Location",
             style: TextStyle(),
           ),
-          content: Container(
+          content: SizedBox(
             height: screenHeight / 2,
             child: GoogleMap(
               mapType: MapType.normal,
