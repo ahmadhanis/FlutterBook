@@ -19,9 +19,7 @@ class ProductDetailsPage extends StatefulWidget {
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
   late double screenHeight, screenWidth, resWidth;
   var pathAsset = "assets/images/camera.png";
-  bool _hasCallSupport = false;
-  Future<void>? _launched;
-  String _phone = '';
+  //final String _phone = '';
 
   @override
   Widget build(BuildContext context) {
@@ -185,21 +183,21 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
         _makePhoneCall(widget.product.user_phone.toString());
         break;
       case 2:
-        print('2!');
+        //('2!');
         _sendSms(widget.product.user_phone.toString());
         break;
       case 3:
-        print('3');
+       // print('3');
         break;
       case 4:
-        print('4');
+        //print('4');
         break;
       case 5:
-        print('5');
+       // print('5');
         _showMapDialogue();
         break;
       default:
-        print('choose a different number!');
+       // print('choose a different number!');
     }
   }
 

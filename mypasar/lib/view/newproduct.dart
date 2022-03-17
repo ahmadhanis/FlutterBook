@@ -552,7 +552,7 @@ class _NewProductPageState extends State<NewProductPage> {
         body: {"email": widget.user.email}).then((response) {
       if (response.statusCode == 200 && response.body != "failed") {
         final jsonResponse = json.decode(response.body);
-        print(response.body);
+       // print(response.body);
         User user = User.fromJson(jsonResponse);
         setState(() {
           widget.user.credit = user.credit;

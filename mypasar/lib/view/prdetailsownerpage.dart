@@ -515,7 +515,7 @@ class _PrDetailsOwnerPageState extends State<PrDetailsOwnerPage> {
             "prqty": _prqty,
             "prdel": _prdel,
           }).then((response) {
-        print(response.body);
+       // print(response.body);
         var data = jsonDecode(response.body);
         if (response.statusCode == 200 && data['status'] == 'success') {
           Fluttertoast.showToast(

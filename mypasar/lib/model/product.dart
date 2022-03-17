@@ -3,8 +3,11 @@ class Product {
   String? prid;
   String? pridowner;
   String? prname;
+  // ignore: non_constant_identifier_names
   String? user_email;
+  // ignore: non_constant_identifier_names
   String? user_name;
+  // ignore: non_constant_identifier_names
   String? user_phone;
   String? prdesc;
   String? prprice;
@@ -21,8 +24,11 @@ class Product {
       required this.prname,
       required this.pridowner,
       required this.prdesc,
+      // ignore: non_constant_identifier_names
       required this.user_email,
+      // ignore: non_constant_identifier_names
       required this.user_name,
+      // ignore: non_constant_identifier_names
       required this.user_phone,
       required this.prprice,
       required this.prqty,

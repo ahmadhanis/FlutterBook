@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
 import 'package:mypasar/model/config.dart';
 import 'package:mypasar/model/product.dart';
@@ -148,7 +147,7 @@ class _TabPage1State extends State<TabPage1> {
         body: {}).then((response) {
       var data = jsonDecode(response.body);
       if (response.statusCode == 200 && data['status'] == 'success') {
-        print(response.body);
+       // print(response.body);
         var extractdata = data['data'];
         setState(() {
           productlist = extractdata["products"];

@@ -18,7 +18,7 @@ class CreditPage extends StatefulWidget {
 class _CreditPageState extends State<CreditPage> {
   late double screenHeight, screenWidth, resWidth;
   final df = DateFormat('dd/MM/yyyy hh:mm a');
-  final bool _value = false;
+ // final bool _value = false;
   int val = -1;
   List<String> creditType = ["5", "10", "15", "20", "25", "50", "100", "1000"];
   String selectedValue = "5";
@@ -132,12 +132,12 @@ class _CreditPageState extends State<CreditPage> {
                               setState(() {
                                 selectedValue = newValue.toString();
 
-                                print(selectedValue);
+                               // print(selectedValue);
                               });
                             },
                             items: creditType.map((selectedValue) {
                               return DropdownMenuItem(
-                                child: Text(selectedValue, style: TextStyle()),
+                                child: Text(selectedValue, style: const TextStyle()),
                                 value: selectedValue,
                               );
                             }).toList(),
@@ -151,7 +151,7 @@ class _CreditPageState extends State<CreditPage> {
                                 fontSize: 16, fontWeight: FontWeight.bold)),
                         const SizedBox(height: 10),
                         ElevatedButton(
-                          child: Text("BUY"),
+                          child: const Text("BUY"),
                           onPressed: _buycreditDialog,
                           style: ElevatedButton.styleFrom(
                               fixedSize: Size(screenWidth / 2, 50)),
@@ -177,7 +177,7 @@ class _CreditPageState extends State<CreditPage> {
             "Buy Credit RM " +
                 double.parse(selectedValue).toStringAsFixed(2) +
                 "?",
-            style: TextStyle(),
+            style: const TextStyle(),
           ),
           content: const Text("Are you sure?", style: TextStyle()),
           actions: <Widget>[
@@ -219,7 +219,7 @@ class _CreditPageState extends State<CreditPage> {
         body: {"email": widget.user.email}).then((response) {
       if (response.statusCode == 200 && response.body != "failed") {
         final jsonResponse = json.decode(response.body);
-        print(response.body);
+        //print(response.body);
         User user = User.fromJson(jsonResponse);
         setState(() {
           widget.user.credit = user.credit;

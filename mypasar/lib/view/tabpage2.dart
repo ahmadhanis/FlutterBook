@@ -193,7 +193,7 @@ class _TabPage2State extends State<TabPage2> {
           fontSize: 14.0);
       return;
     }
-    print(widget.user.phone);
+    //print(widget.user.phone);
     if (widget.user.phone == "na") {
       Fluttertoast.showToast(
           msg: "Please add your phone number in the profile tab",
@@ -223,9 +223,9 @@ class _TabPage2State extends State<TabPage2> {
     http.post(Uri.parse(MyConfig.server + "/php/load_products.php"),
         body: {"userid": widget.user.id}).then((response) {
       var data = jsonDecode(response.body);
-      print(data);
+      //print(data);
       if (response.statusCode == 200 && data['status'] == 'success') {
-        print(response.body);
+       // print(response.body);
         var extractdata = data['data'];
         setState(() {
           productlist = extractdata["products"];

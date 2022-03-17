@@ -63,13 +63,13 @@ class _BillPageState extends State<BillPage> {
               _controller.complete(webViewController);
             },
             onProgress: (int progress) {
-              print('WebView is loading (progress : $progress%)');
+             // print('WebView is loading (progress : $progress%)');
             },
             onPageStarted: (String url) {
-              print('Page started loading: $url');
+             // print('Page started loading: $url');
             },
             onPageFinished: (String url) {
-              print('Page finished loading: $url');
+              //print('Page finished loading: $url');
             },
           ),
         ),

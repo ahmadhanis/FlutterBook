@@ -181,7 +181,7 @@ class _TabPage3State extends State<TabPage3> {
                         ),
                         MaterialButton(
                           onPressed: () => {_updateProfileDialog(3)},
-                          child: Text("UPDATE PASSWORD"),
+                          child: const Text("UPDATE PASSWORD"),
                         ),
                         const Divider(
                           height: 2,
@@ -469,7 +469,7 @@ class _TabPage3State extends State<TabPage3> {
                       "userid": widget.user.id
                     }).then((response) {
                   var data = jsonDecode(response.body);
-                  print(data);
+                //  print(data);
                   if (response.statusCode == 200 &&
                       data['status'] == 'success') {
                     Fluttertoast.showToast(
@@ -540,7 +540,7 @@ class _TabPage3State extends State<TabPage3> {
                       "userid": widget.user.id
                     }).then((response) {
                   var data = jsonDecode(response.body);
-                  print(data);
+                 // print(data);
                   if (response.statusCode == 200 &&
                       data['status'] == 'success') {
                     Fluttertoast.showToast(
@@ -664,7 +664,7 @@ class _TabPage3State extends State<TabPage3> {
                       "userid": widget.user.id
                     }).then((response) {
                   var data = jsonDecode(response.body);
-                  print(data);
+                //  print(data);
                   if (response.statusCode == 200 &&
                       data['status'] == 'success') {
                     Fluttertoast.showToast(
@@ -716,7 +716,7 @@ class _TabPage3State extends State<TabPage3> {
         body: {"email": widget.user.email}).then((response) {
       if (response.statusCode == 200 && response.body != "failed") {
         final jsonResponse = json.decode(response.body);
-        print(response.body);
+        //print(response.body);
         User user = User.fromJson(jsonResponse);
         setState(() {
           widget.user.credit = user.credit;
