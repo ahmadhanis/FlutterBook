@@ -1,35 +1,40 @@
 <?php
+
+if (!isset($_POST)) {
+    $response = array('status' => 'failed', 'data' => null);
+    sendJsonResponse($response);
+    die();
+}
+
 include_once("dbconnect.php");
-
-$sqlloadproduct = "SELECT * FROM tbl_products INNER JOIN tbl_users ON tbl_products.pridowner = tbl_users.user_id ORDER BY tbl_products.prdate DESC";
-
+$email = $_POST['email'];
+$sqlloadproduct = "SELECT * FROM tbl_products INNER JOIN tbl_users ON tbl_products.user_email = tbl_users.user_email WHERE tbl_products.user_email != '$email'  ORDER BY tbl_products.product_date DESC";
 $result = $conn->query($sqlloadproduct);
 if ($result->num_rows > 0) {
     $products["products"] = array();
 while ($row = $result->fetch_assoc()) {
         $prlist = array();
-        $prlist['prid'] = $row['prid'];
-        $prlist['prname'] = $row['prname'];
-        $prlist['pridowner'] = $row['pridowner'];
         $prlist['user_name'] = $row['user_name'];
         $prlist['user_email'] = $row['user_email'];
         $prlist['user_phone'] = $row['user_phone'];
-        $prlist['prdesc'] = $row['prdesc'];
-        $prlist['prprice'] = $row['prprice'];
-        $prlist['prqty'] = $row['prqty'];
-        $prlist['prdel'] = $row['prdel'];
-        $prlist['prstate'] = $row['prstate'];
-        $prlist['prloc'] = $row['prloc'];
-        $prlist['prlat'] = $row['prlat'];
-        $prlist['prlong'] = $row['prlong'];
-        $prlist['prdate'] = $row['prdate'];
+        $prlist['product_id'] = $row['product_id'];
+        $prlist['product_name'] = $row['product_name'];
+        $prlist['user_email'] = $row['user_email'];
+        $prlist['product_desc'] = $row['product_desc'];
+        $prlist['product_price'] = $row['product_price'];
+        $prlist['product_qty'] = $row['product_qty'];
+        $prlist['product_state'] = $row['product_state'];
+        $prlist['product_loc'] = $row['product_loc'];
+        $prlist['product_lat'] = $row['product_lat'];
+        $prlist['product_long'] = $row['product_long'];
+        $prlist['product_date'] = $row['product_date'];
 
         array_push($products["products"],$prlist);
     }
     $response = array('status' => 'success', 'data' => $products);
     sendJsonResponse($response);
 }else{
-    $response = array('status' => 'failed', 'data' => null);
+    $response = array('status' => 'failed', 'data' => $sqlloadproduct);
     sendJsonResponse($response);
 }
 

@@ -80,8 +80,8 @@ class _TabPage2State extends State<TabPage2> {
                                   width: screenWidth,
                                   fit: BoxFit.cover,
                                   imageUrl: MyConfig.server +
-                                      "/images/products/" +
-                                      productlist[index]['prid'] +
+                                      "/mypasar/images/products/" +
+                                      productlist[index]['product_id'] +
                                       ".png",
                                   placeholder: (context, url) =>
                                       const LinearProgressIndicator(),
@@ -97,7 +97,7 @@ class _TabPage2State extends State<TabPage2> {
                                       children: [
                                         Text(
                                             truncateString(productlist[index]
-                                                    ['prname']
+                                                    ['product_name']
                                                 .toString()),
                                             style: TextStyle(
                                                 fontSize: resWidth * 0.045,
@@ -105,17 +105,17 @@ class _TabPage2State extends State<TabPage2> {
                                         Text(
                                             "RM " +
                                                 double.parse(productlist[index]
-                                                        ['prprice'])
+                                                        ['product_price'])
                                                     .toStringAsFixed(2) +
                                                 "  -  " +
-                                                productlist[index]['prqty'] +
+                                                productlist[index]['product_qty'] +
                                                 " in stock",
                                             style: TextStyle(
                                               fontSize: resWidth * 0.03,
                                             )),
                                         Text(
                                             df.format(DateTime.parse(
-                                                productlist[index]['prdate'])),
+                                                productlist[index]['product_date'])),
                                             style: TextStyle(
                                               fontSize: resWidth * 0.03,
                                             ))
@@ -220,15 +220,15 @@ class _TabPage2State extends State<TabPage2> {
       });
       return;
     }
-    http.post(Uri.parse(MyConfig.server + "/php/load_products.php"),
-        body: {"userid": widget.user.id}).then((response) {
+    http.post(Uri.parse(MyConfig.server + "/mypasar/php/load_products.php"),
+        body: {"email": widget.user.email}).then((response) {
       var data = jsonDecode(response.body);
-      //print(data);
+      print(response.body);
       if (response.statusCode == 200 && data['status'] == 'success') {
-       // print(response.body);
+        // print(response.body);
         var extractdata = data['data'];
         setState(() {
-          productlist = extractdata["products"];
+          productlist = extractdata;
           numprd = productlist.length;
           if (scrollcount >= productlist.length) {
             scrollcount = productlist.length;
@@ -244,21 +244,18 @@ class _TabPage2State extends State<TabPage2> {
 
   _prodDetails(int index) async {
     Product product = Product(
-        prid: productlist[index]['prid'],
-        prname: productlist[index]['prname'],
-        prdesc: productlist[index]['prdesc'],
-        prprice: productlist[index]['prprice'],
-        prqty: productlist[index]['prqty'],
-        prdel: productlist[index]['prdel'],
-        user_email: "",
-        user_name: "",
-        user_phone: "",
-        prstate: productlist[index]['prstate'],
-        prloc: productlist[index]['prloc'],
-        prlat: productlist[index]['prlat'],
-        prlong: productlist[index]['prlong'],
-        prdate: productlist[index]['prdate'],
-        pridowner: productlist[index]['pridowner']);
+      productId: productlist[index]['product_id'],
+      productName: productlist[index]['product_name'],
+      productDesc: productlist[index]['product_desc'],
+      productPrice: productlist[index]['product_price'],
+      productQty: productlist[index]['product_qty'],
+      userEmail: productlist[index]['user_email'],
+      productState: productlist[index]['product_state'],
+      productLoc: productlist[index]['product_loc'],
+      productLat: productlist[index]['product_lat'],
+      productLong: productlist[index]['product_long'],
+      productDate: productlist[index]['product_date'],
+    );
     await Navigator.push(
         context,
         MaterialPageRoute(

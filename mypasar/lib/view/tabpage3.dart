@@ -56,7 +56,7 @@ class _TabPage3State extends State<TabPage3> {
                               padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                               child: CachedNetworkImage(
                                 imageUrl: MyConfig.server +
-                                    "/images/profiles/" +
+                                    "/mypasar/images/profiles/" +
                                     widget.user.id.toString() +
                                     ".png",
                                 placeholder: (context, url) =>
@@ -373,32 +373,34 @@ class _TabPage3State extends State<TabPage3> {
   }
 
   Future<void> _cropImage() async {
-    File? croppedFile = await ImageCropper.cropImage(
+    File? croppedFile = await ImageCropper().cropImage(
         sourcePath: _image!.path,
-        aspectRatioPresets: Platform.isAndroid
-            ? [
-                CropAspectRatioPreset.square,
-                CropAspectRatioPreset.ratio3x2,
-              ]
-            : [
-                CropAspectRatioPreset.square,
-              ],
+        aspectRatioPresets: [
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9
+        ],
         androidUiSettings: const AndroidUiSettings(
-            toolbarTitle: 'Crop',
+            toolbarTitle: 'Cropper',
             toolbarColor: Colors.deepOrange,
-            initAspectRatio: CropAspectRatioPreset.square,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
             lockAspectRatio: false),
         iosUiSettings: const IOSUiSettings(
-          title: 'Crop Image',
+          minimumAspectRatio: 1.0,
         ));
     if (croppedFile != null) {
       _image = croppedFile;
+        _image = croppedFile;
       String base64Image = base64Encode(_image!.readAsBytesSync());
-      http.post(Uri.parse(MyConfig.server + "/php/update_profile.php"), body: {
+      http.post(Uri.parse(MyConfig.server + "/mypasar/php/update_profile.php"), body: {
         "image": base64Image,
         "userid": widget.user.id
       }).then((response) {
         var data = jsonDecode(response.body);
+        print(data);
         if (response.statusCode == 200 && data['status'] == 'success') {
           Fluttertoast.showToast(
               msg: "Success",
@@ -421,7 +423,9 @@ class _TabPage3State extends State<TabPage3> {
               fontSize: 14.0);
         }
       });
+      setState(() {});
     }
+    
   }
 
   _updateProfileDialog(int i) {
@@ -534,7 +538,7 @@ class _TabPage3State extends State<TabPage3> {
               onPressed: () {
                 Navigator.of(context).pop();
                 http.post(
-                    Uri.parse(MyConfig.server + "/php/update_profile.php"),
+                    Uri.parse(MyConfig.server + "/mypasar/php/update_profile.php"),
                     body: {
                       "phone": _phoneeditingController.text,
                       "userid": widget.user.id

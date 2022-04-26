@@ -47,13 +47,12 @@ class _PrDetailsOwnerPageState extends State<PrDetailsOwnerPage> {
   @override
   void initState() {
     super.initState();
-    _prnameEditingController.text = widget.product.prname.toString();
-    _prdescEditingController.text = widget.product.prdesc.toString();
-    _prpriceEditingController.text = widget.product.prprice.toString();
-    _prdelEditingController.text = widget.product.prdel.toString();
-    _prqtyEditingController.text = widget.product.prqty.toString();
-    _prstateEditingController.text = widget.product.prstate.toString();
-    _prlocalEditingController.text = widget.product.prloc.toString();
+    _prnameEditingController.text = widget.product.productName.toString();
+    _prdescEditingController.text = widget.product.productDesc.toString();
+    _prpriceEditingController.text = widget.product.productPrice.toString();
+    _prqtyEditingController.text = widget.product.productQty.toString();
+    _prstateEditingController.text = widget.product.productState.toString();
+    _prlocalEditingController.text = widget.product.productLoc.toString();
   }
 
   @override
@@ -90,8 +89,8 @@ class _PrDetailsOwnerPageState extends State<PrDetailsOwnerPage> {
                           image: DecorationImage(
                             image: _image == null
                                 ? NetworkImage(MyConfig.server +
-                                    "/images/products/" +
-                                    widget.product.prid.toString() +
+                                    "/mypasar/images/products/" +
+                                    widget.product.productId.toString() +
                                     ".png")
                                 : FileImage(_image!) as ImageProvider,
                             fit: BoxFit.fill,
@@ -254,42 +253,19 @@ class _PrDetailsOwnerPageState extends State<PrDetailsOwnerPage> {
                                           )))),
                             ],
                           ),
-                          Row(children: [
-                            Flexible(
-                              flex: 5,
-                              child: TextFormField(
-                                  textInputAction: TextInputAction.next,
-                                  enabled: editForm,
-                                  validator: (val) => val!.isEmpty
-                                      ? "Must be more than zero"
-                                      : null,
-                                  focusNode: focus3,
-                                  onFieldSubmitted: (v) {
-                                    FocusScope.of(context).requestFocus(focus4);
-                                  },
-                                  controller: _prdelEditingController,
-                                  keyboardType: TextInputType.number,
-                                  decoration: const InputDecoration(
-                                      labelText: 'Delivery charge/km',
-                                      labelStyle: TextStyle(),
-                                      icon: Icon(Icons.delivery_dining),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(width: 2.0),
-                                      ))),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                            child: CheckboxListTile(
+                              title: const Text(
+                                  "Lawfull Item?"), //    <-- label
+                              value: _isChecked,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  _isChecked = value!;
+                                });
+                              },
                             ),
-                            Flexible(
-                                flex: 5,
-                                child: CheckboxListTile(
-                                  title: const Text(
-                                      "Lawfull Item?"), //    <-- label
-                                  value: _isChecked,
-                                  onChanged: (bool? value) {
-                                    setState(() {
-                                      _isChecked = value!;
-                                    });
-                                  },
-                                )),
-                          ]),
+                          ),
                           const SizedBox(
                             height: 15,
                           ),
@@ -388,28 +364,28 @@ class _PrDetailsOwnerPageState extends State<PrDetailsOwnerPage> {
   }
 
   Future<void> _cropImage() async {
-    File? croppedFile = await ImageCropper.cropImage(
-        sourcePath: _image!.path,
-        aspectRatioPresets: Platform.isAndroid
-            ? [
-                CropAspectRatioPreset.square,
-                CropAspectRatioPreset.ratio3x2,
-              ]
-            : [
-                CropAspectRatioPreset.square,
-              ],
-        androidUiSettings: const AndroidUiSettings(
-            toolbarTitle: 'Crop',
-            toolbarColor: Colors.deepOrange,
-            initAspectRatio: CropAspectRatioPreset.square,
-            lockAspectRatio: false),
-        iosUiSettings: const IOSUiSettings(
-          title: 'Crop Image',
-        ));
-    if (croppedFile != null) {
-      _image = croppedFile;
-      setState(() {});
-    }
+    // File? croppedFile = await ImageCropper.cropImage(
+    //     sourcePath: _image!.path,
+    //     aspectRatioPresets: Platform.isAndroid
+    //         ? [
+    //             CropAspectRatioPreset.square,
+    //             CropAspectRatioPreset.ratio3x2,
+    //           ]
+    //         : [
+    //             CropAspectRatioPreset.square,
+    //           ],
+    //     androidUiSettings: const AndroidUiSettings(
+    //         toolbarTitle: 'Crop',
+    //         toolbarColor: Colors.deepOrange,
+    //         initAspectRatio: CropAspectRatioPreset.square,
+    //         lockAspectRatio: false),
+    //     iosUiSettings: const IOSUiSettings(
+    //       title: 'Crop Image',
+    //     ));
+    // if (croppedFile != null) {
+    //   _image = croppedFile;
+    //   setState(() {});
+    // }
   }
 
   void _onEditForm() {
@@ -453,7 +429,6 @@ class _PrDetailsOwnerPageState extends State<PrDetailsOwnerPage> {
       );
     }
   }
-  
 
   void _updateProductDialog() {
     showDialog(
@@ -498,7 +473,6 @@ class _PrDetailsOwnerPageState extends State<PrDetailsOwnerPage> {
     String _prdesc = _prdescEditingController.text;
     String _prprice = _prpriceEditingController.text;
     String _prqty = _prqtyEditingController.text;
-    String _prdel = _prdelEditingController.text;
     FocusScope.of(context).requestFocus(FocusNode());
     FocusScope.of(context).unfocus();
     ProgressDialog progressDialog = ProgressDialog(context,
@@ -506,16 +480,14 @@ class _PrDetailsOwnerPageState extends State<PrDetailsOwnerPage> {
         title: const Text("Processing..."));
     progressDialog.show();
     if (_image == null) {
-      http.post(Uri.parse(MyConfig.server + "/php/update_product.php"),
-          body: {
-            "prid": widget.product.prid,
-            "prname": _prname,
-            "prdesc": _prdesc,
-            "prprice": _prprice,
-            "prqty": _prqty,
-            "prdel": _prdel,
-          }).then((response) {
-       // print(response.body);
+      http.post(Uri.parse(MyConfig.server + "/php/update_product.php"), body: {
+        "prid": widget.product.productId,
+        "prname": _prname,
+        "prdesc": _prdesc,
+        "prprice": _prprice,
+        "prqty": _prqty,
+      }).then((response) {
+        // print(response.body);
         var data = jsonDecode(response.body);
         if (response.statusCode == 200 && data['status'] == 'success') {
           Fluttertoast.showToast(
@@ -540,16 +512,14 @@ class _PrDetailsOwnerPageState extends State<PrDetailsOwnerPage> {
       });
     } else {
       String base64Image = base64Encode(_image!.readAsBytesSync());
-      http.post(Uri.parse(MyConfig.server + "/php/update_product.php"),
-          body: {
-            "prid": widget.product.prid,
-            "prname": _prname,
-            "prdesc": _prdesc,
-            "prprice": _prprice,
-            "prqty": _prqty,
-            "prdel": _prdel,
-            "image": base64Image,
-          }).then((response) {
+      http.post(Uri.parse(MyConfig.server + "/php/update_product.php"), body: {
+        "prid": widget.product.productId,
+        "prname": _prname,
+        "prdesc": _prdesc,
+        "prprice": _prprice,
+        "prqty": _prqty,
+        "image": base64Image,
+      }).then((response) {
         var data = jsonDecode(response.body);
         if (response.statusCode == 200 && data['status'] == 'success') {
           Fluttertoast.showToast(
@@ -619,10 +589,9 @@ class _PrDetailsOwnerPageState extends State<PrDetailsOwnerPage> {
         message: const Text("Deleting product.."),
         title: const Text("Processing..."));
     progressDialog.show();
-    http.post(Uri.parse(MyConfig.server + "/php/delete_product.php"),
-        body: {
-          "prid": widget.product.prid,
-        }).then((response) {
+    http.post(Uri.parse(MyConfig.server + "/php/delete_product.php"), body: {
+      "prid": widget.product.productId,
+    }).then((response) {
       var data = jsonDecode(response.body);
       if (response.statusCode == 200 && data['status'] == 'success') {
         Fluttertoast.showToast(

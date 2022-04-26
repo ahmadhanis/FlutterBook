@@ -235,16 +235,15 @@ class _LoginPageState extends State<LoginPage> {
     ProgressDialog progressDialog = ProgressDialog(context,
         message: const Text("Please wait.."), title: const Text("Login user"));
     progressDialog.show();
-    
+
     String _email = _emailditingController.text;
     String _pass = _passEditingController.text;
-    http.post(Uri.parse(MyConfig.server + "/php/login_user.php"),
+    http.post(Uri.parse(MyConfig.server + "/mypasar/php/login_user.php"),
         body: {"email": _email, "password": _pass}).then((response) {
-      if (response.statusCode == 200 && response.body != "failed") {
-        final jsonResponse = json.decode(response.body);
-        
-        //print(response.body);
-        User user = User.fromJson(jsonResponse);
+      print(response.body);
+      var jsondata = jsonDecode(response.body);
+      if (response.statusCode == 200 && jsondata['status'] == 'success') {
+        User user = User.fromJson(jsondata['data']);
         Fluttertoast.showToast(
             msg: "Login Success",
             toastLength: Toast.LENGTH_SHORT,

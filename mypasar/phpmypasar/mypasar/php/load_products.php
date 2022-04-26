@@ -1,29 +1,34 @@
 <?php
+if (!isset($_POST)) {
+    $response = array('status' => 'failed', 'data' => null);
+    sendJsonResponse($response);
+    die();
+}
+
 include_once("dbconnect.php");
-$userid = $_POST['userid'];
-$sqlloadproduct = "SELECT * FROM tbl_products WHERE pridowner = '$userid' ORDER BY prdate DESC";
+$email = $_POST['email'];
+$sqlloadproduct = "SELECT * FROM tbl_products WHERE user_email = '$email' ORDER BY product_date DESC";
 $result = $conn->query($sqlloadproduct);
 if ($result->num_rows > 0) {
-     $products["products"] = array();
-while ($row = $result->fetch_assoc()) {
+    $data["products"] = array();
+    while ($row = $result->fetch_assoc()) {
         $prlist = array();
-        $prlist['prid'] = $row['prid'];
-        $prlist['prname'] = $row['prname'];
-        $prlist['pridowner'] = $row['pridowner'];
-        $prlist['prdesc'] = $row['prdesc'];
-        $prlist['prprice'] = $row['prprice'];
-        $prlist['prqty'] = $row['prqty'];
-        $prlist['prdel'] = $row['prdel'];
-        $prlist['prstate'] = $row['prstate'];
-        $prlist['prloc'] = $row['prloc'];
-        $prlist['prlat'] = $row['prlat'];
-        $prlist['prlong'] = $row['prlong'];
-        $prlist['prdate'] = $row['prdate'];
-        array_push($products["products"],$prlist);
+        $prlist['product_id'] = $row['product_id'];
+        $prlist['product_name'] = $row['product_name'];
+        $prlist['user_email'] = $row['user_email'];
+        $prlist['product_desc'] = $row['product_desc'];
+        $prlist['product_price'] = $row['product_price'];
+        $prlist['product_qty'] = $row['product_qty'];
+        $prlist['product_state'] = $row['product_state'];
+        $prlist['product_loc'] = $row['product_loc'];
+        $prlist['product_lat'] = $row['product_lat'];
+        $prlist['product_long'] = $row['product_long'];
+        $prlist['product_date'] = $row['product_date'];
+        array_push($data["products"], $prlist);
     }
-     $response = array('status' => 'success', 'data' => $products);
+    $response = array('status' => 'success', 'data' => $data["products"]);
     sendJsonResponse($response);
-}else{
+} else {
     $response = array('status' => 'failed', 'data' => null);
     sendJsonResponse($response);
 }
@@ -33,5 +38,4 @@ function sendJsonResponse($sentArray)
     header('Content-Type: application/json');
     echo json_encode($sentArray);
 }
-
 ?>

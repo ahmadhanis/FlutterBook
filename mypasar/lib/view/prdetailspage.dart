@@ -44,15 +44,15 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     width: screenWidth,
                     fit: BoxFit.cover,
                     imageUrl: MyConfig.server +
-                        "/images/products/" +
-                        widget.product.prid.toString() +
+                        "/mypasar/images/products/" +
+                        widget.product.productId.toString() +
                         ".png",
                     placeholder: (context, url) =>
                         const LinearProgressIndicator(),
                     errorWidget: (context, url, error) =>
                         const Icon(Icons.error),
                   ))),
-          Text(widget.product.prname.toString(),
+          Text(widget.product.productName.toString(),
               style:
                   const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           Expanded(
@@ -78,47 +78,40 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                           const Text('Description',
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold)),
-                          Text(widget.product.prdesc.toString()),
+                          Text(widget.product.productDesc.toString()),
                         ]),
                         TableRow(children: [
                           const Text('Price',
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold)),
                           Text("RM " +
-                              double.parse(widget.product.prprice.toString())
+                              double.parse(widget.product.productPrice.toString())
                                   .toStringAsFixed(2)),
                         ]),
                         TableRow(children: [
                           const Text('Quantity',
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold)),
-                          Text(widget.product.prqty.toString()),
+                          Text(widget.product.productQty.toString()),
                         ]),
                         TableRow(children: [
                           const Text('State',
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold)),
-                          Text(widget.product.prstate.toString()),
+                          Text(widget.product.productState.toString()),
                         ]),
                         TableRow(children: [
                           const Text('Locality',
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold)),
-                          Text(widget.product.prloc.toString()),
+                          Text(widget.product.productLoc.toString()),
                         ]),
-                        TableRow(children: [
-                          const Text('Delivery',
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold)),
-                          Text("RM " +
-                              double.parse(widget.product.prdel.toString())
-                                  .toStringAsFixed(2)),
-                        ]),
+                        
                         TableRow(children: [
                           const Text('Owner',
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold)),
-                          Text(widget.product.user_name.toString()),
+                          Text(widget.product.userEmail.toString()),
                         ]),
                       ],
                     ),
@@ -180,11 +173,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   void _onCallDialog(int r) {
     switch (r) {
       case 1:
-        _makePhoneCall(widget.product.user_phone.toString());
+       // _makePhoneCall(widget.product.user_phone.toString());
         break;
       case 2:
         //('2!');
-        _sendSms(widget.product.user_phone.toString());
+        //_sendSms(widget.product.user_phone.toString());
         break;
       case 3:
        // print('3');
@@ -228,8 +221,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
     Completer<GoogleMapController> _controller = Completer();
     CameraPosition prlocation = CameraPosition(
-      target: LatLng(double.parse(widget.product.prlat.toString()),
-          double.parse(widget.product.prlong.toString())),
+      target: LatLng(double.parse(widget.product.productLat.toString()),
+          double.parse(widget.product.productLong.toString())),
       zoom: 15.4746,
     );
 
@@ -239,11 +232,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
         markerId: markerId,
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
         position: LatLng(
-          double.parse(widget.product.prlat.toString()),
-          double.parse(widget.product.prlong.toString()),
+          double.parse(widget.product.productLat.toString()),
+          double.parse(widget.product.productLong.toString()),
         ),
         infoWindow: InfoWindow(
-          title: widget.product.prname.toString(),
+          title: widget.product.productName.toString(),
         ));
     markers[markerId] = marker;
 

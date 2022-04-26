@@ -56,13 +56,12 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget upperHalf(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-      child: SizedBox( 
+      child: SizedBox(
         height: screenHeight / 3.5,
         width: resWidth * 0.7,
         child: Image.asset(
           'assets/images/mypasar.png',
           fit: BoxFit.cover,
-          
         ),
       ),
     );
@@ -83,7 +82,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
-                     Text(
+                    Text(
                       "Register New Account",
                       style: TextStyle(
                         fontSize: resWidth * 0.05,
@@ -365,7 +364,7 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
           content: SizedBox(
             height: screenHeight / 1.5,
-            width: screenWidth ,
+            width: screenWidth,
             child: Column(
               children: <Widget>[
                 Expanded(
@@ -416,7 +415,7 @@ class _RegisterPageState extends State<RegisterPage> {
         title: const Text("Registering..."));
     progressDialog.show();
 
-    http.post(Uri.parse(MyConfig.server + "/php/register_user.php"),
+    http.post(Uri.parse(MyConfig.server + "/mypasar/php/register_user.php"),
         body: {
           "name": _name,
           "email": _email,
@@ -431,6 +430,10 @@ class _RegisterPageState extends State<RegisterPage> {
             timeInSecForIosWeb: 1,
             fontSize: 14.0);
         progressDialog.dismiss();
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => const LoginPage()));
         return;
       } else {
         Fluttertoast.showToast(

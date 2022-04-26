@@ -1,73 +1,56 @@
-
 class Product {
-  String? prid;
-  String? pridowner;
-  String? prname;
-  // ignore: non_constant_identifier_names
-  String? user_email;
-  // ignore: non_constant_identifier_names
-  String? user_name;
-  // ignore: non_constant_identifier_names
-  String? user_phone;
-  String? prdesc;
-  String? prprice;
-  String? prqty;
-  String? prdel;
-  String? prstate;
-  String? prloc;
-  String? prlat;
-  String? prlong;
-  String? prdate;
+  String? productId;
+  String? productName;
+  String? userEmail;
+  String? productDesc;
+  String? productPrice;
+  String? productQty;
+  String? productState;
+  String? productLoc;
+  String? productLat;
+  String? productLong;
+  String? productDate;
 
   Product(
-      {required this.prid,
-      required this.prname,
-      required this.pridowner,
-      required this.prdesc,
-      // ignore: non_constant_identifier_names
-      required this.user_email,
-      // ignore: non_constant_identifier_names
-      required this.user_name,
-      // ignore: non_constant_identifier_names
-      required this.user_phone,
-      required this.prprice,
-      required this.prqty,
-      required this.prdel,
-      required this.prstate,
-      required this.prloc,
-      required this.prlat,
-      required this.prlong,
-      required this.prdate});
+      {this.productId,
+      this.productName,
+      this.userEmail,
+      this.productDesc,
+      this.productPrice,
+      this.productQty,
+      this.productState,
+      this.productLoc,
+      this.productLat,
+      this.productLong,
+      this.productDate});
 
   Product.fromJson(Map<String, dynamic> json) {
-    prid = json['prid'];
-    prname = json['prname'];
-    pridowner = json['pridowner'];
-    prdesc = json['prdesc'];
-    prprice = json['prprice'];
-    prqty = json['prqty'];
-    prdel = json['prdel'];
-    prstate = json['prstate'];
-    prloc = json['prloc'];
-    prlat = json['prlat'];
-    prlong = json['prlong'];
-    prdate = json['prdate'];
+    productId = json['product_id'];
+    productName = json['product_name'];
+    userEmail = json['user_email'];
+    productDesc = json['product_desc'];
+    productPrice = json['product_price'];
+    productQty = json['product_qty'];
+    productState = json['product_state'];
+    productLoc = json['product_loc'];
+    productLat = json['product_lat'];
+    productLong = json['product_long'];
+    productDate = json['product_date'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['prid'] = prid;
-    data['prname'] = prname;
-    data['pridowner'] = pridowner;
-    data['prdesc'] = prdesc;
-    data['prprice'] = prprice;
-    data['prqty'] = prqty;
-    data['prdel'] = prdel;
-    data['prstate'] = prstate;
-    data['prloc'] = prloc;
-    data['prlat'] = prlat;
-    data['prlong'] = prlong;
-    data['prdate'] = prdate;
+    data['product_id'] = productId;
+    data['product_name'] = productName;
+    data['user_email'] = userEmail;
+    data['product_desc'] = productDesc;
+    data['product_price'] = productPrice;
+    data['product_qty'] = productQty;
+    data['product_state'] = productState;
+    data['product_loc'] = productLoc;
+    data['product_lat'] = productLat;
+    data['product_long'] = productLong;
+    data['product_date'] = productDate;
     return data;
   }
 }

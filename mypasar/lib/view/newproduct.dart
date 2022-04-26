@@ -106,9 +106,10 @@ class _NewProductPageState extends State<NewProductPage> {
                           ),
                           TextFormField(
                               textInputAction: TextInputAction.next,
-                              validator: (val) => val!.isEmpty || (val.length < 3)
-                                  ? "Product name must be longer than 3"
-                                  : null,
+                              validator: (val) =>
+                                  val!.isEmpty || (val.length < 3)
+                                      ? "Product name must be longer than 3"
+                                      : null,
                               onFieldSubmitted: (v) {
                                 FocusScope.of(context).requestFocus(focus);
                               },
@@ -125,7 +126,8 @@ class _NewProductPageState extends State<NewProductPage> {
                                   ))),
                           TextFormField(
                               textInputAction: TextInputAction.next,
-                              validator: (val) => val!.isEmpty || (val.length < 3)
+                              validator: (val) => val!.isEmpty ||
+                                      (val.length < 3)
                                   ? "Product description must be longer than 3"
                                   : null,
                               focusNode: focus,
@@ -156,7 +158,8 @@ class _NewProductPageState extends State<NewProductPage> {
                                         : null,
                                     focusNode: focus1,
                                     onFieldSubmitted: (v) {
-                                      FocusScope.of(context).requestFocus(focus2);
+                                      FocusScope.of(context)
+                                          .requestFocus(focus2);
                                     },
                                     controller: _prpriceEditingController,
                                     keyboardType: TextInputType.number,
@@ -179,7 +182,8 @@ class _NewProductPageState extends State<NewProductPage> {
                                         : null,
                                     focusNode: focus2,
                                     onFieldSubmitted: (v) {
-                                      FocusScope.of(context).requestFocus(focus3);
+                                      FocusScope.of(context)
+                                          .requestFocus(focus3);
                                     },
                                     controller: _prqtyEditingController,
                                     keyboardType: TextInputType.number,
@@ -242,32 +246,12 @@ class _NewProductPageState extends State<NewProductPage> {
                             ],
                           ),
                           Row(children: [
-                            Flexible(
-                              flex: 5,
-                              child: TextFormField(
-                                  textInputAction: TextInputAction.next,
-                                  validator: (val) => val!.isEmpty
-                                      ? "Must be more than zero"
-                                      : null,
-                                  focusNode: focus3,
-                                  onFieldSubmitted: (v) {
-                                    FocusScope.of(context).requestFocus(focus4);
-                                  },
-                                  controller: _prdelEditingController,
-                                  keyboardType: TextInputType.number,
-                                  decoration: const InputDecoration(
-                                      labelText: 'Delivery charge/km',
-                                      labelStyle: TextStyle(),
-                                      icon: Icon(Icons.delivery_dining),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(width: 2.0),
-                                      ))),
-                            ),
+                            
                             Flexible(
                                 flex: 5,
                                 child: CheckboxListTile(
-                                  title:
-                                      const Text("Lawfull Item?"), //    <-- label
+                                  title: const Text(
+                                      "Lawfull Item?"), //    <-- label
                                   value: _isChecked,
                                   onChanged: (bool? value) {
                                     setState(() {
@@ -281,7 +265,7 @@ class _NewProductPageState extends State<NewProductPage> {
                           ),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                                fixedSize: Size(resWidth/2, resWidth * 0.1)),
+                                fixedSize: Size(resWidth / 2, resWidth * 0.1)),
                             child: const Text('Add Product'),
                             onPressed: () => {
                               _newProductDialog(),
@@ -326,10 +310,10 @@ class _NewProductPageState extends State<NewProductPage> {
                     _selectfromGallery(),
                   },
                 ),
-                const SizedBox(width:10),
+                const SizedBox(width: 10),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      fixedSize: Size(resWidth * 0.2 , resWidth * 0.2)),
+                      fixedSize: Size(resWidth * 0.2, resWidth * 0.2)),
                   child: const Text('Camera'),
                   onPressed: () => {
                     Navigator.of(context).pop(),
@@ -379,7 +363,7 @@ class _NewProductPageState extends State<NewProductPage> {
                 "Yes",
                 style: TextStyle(),
               ),
-              onPressed: ()  async {
+              onPressed: () async {
                 Navigator.of(context).pop();
                 await _addNewProduct();
                 _loadNewCredit();
@@ -400,7 +384,7 @@ class _NewProductPageState extends State<NewProductPage> {
     );
   }
 
-   _addNewProduct() {
+  _addNewProduct() {
     String _prname = _prnameEditingController.text;
     String _prdesc = _prdescEditingController.text;
     String _prprice = _prpriceEditingController.text;
@@ -417,20 +401,20 @@ class _NewProductPageState extends State<NewProductPage> {
     progressDialog.show();
 
     String base64Image = base64Encode(_image!.readAsBytesSync());
-    http.post(Uri.parse(MyConfig.server + "/php/new_product.php"), body: {
+    http.post(Uri.parse(MyConfig.server + "/mypasar/php/new_product.php"), body: {
       "pridowner": widget.user.id,
-      "premail" : widget.user.email,
+      "premail": widget.user.email,
       "prname": _prname,
       "prdesc": _prdesc,
       "prprice": _prprice,
       "prqty": _prqty,
-      "prdel": _prdel,
       "prstate": _prstate,
       "prloc": _prloc,
       "prlat": prlat,
       "prlong": prlong,
       "image": base64Image,
     }).then((response) {
+      print(response.body);
       var data = jsonDecode(response.body);
       if (response.statusCode == 200 && data['status'] == 'success') {
         Fluttertoast.showToast(
@@ -485,23 +469,23 @@ class _NewProductPageState extends State<NewProductPage> {
   }
 
   Future<void> _cropImage() async {
-    File? croppedFile = await ImageCropper.cropImage(
+    File? croppedFile = await ImageCropper().cropImage(
         sourcePath: _image!.path,
-        aspectRatioPresets: Platform.isAndroid
-            ? [
-                CropAspectRatioPreset.square,
-                CropAspectRatioPreset.ratio3x2,
-              ]
-            : [
-                CropAspectRatioPreset.square,
-              ],
+        aspectRatioPresets: [
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9
+        ],
         androidUiSettings: const AndroidUiSettings(
-            toolbarTitle: 'Crop',
+            toolbarTitle: 'Cropper',
             toolbarColor: Colors.deepOrange,
-            initAspectRatio: CropAspectRatioPreset.square,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
             lockAspectRatio: false),
         iosUiSettings: const IOSUiSettings(
-          title: 'Crop Image',
+          minimumAspectRatio: 1.0,
         ));
     if (croppedFile != null) {
       _image = croppedFile;
@@ -548,11 +532,11 @@ class _NewProductPageState extends State<NewProductPage> {
   }
 
   _loadNewCredit() {
-    http.post(Uri.parse(MyConfig.server + "/php/load_user.php"),
+    http.post(Uri.parse(MyConfig.server + "/mypasar/php/load_user.php"),
         body: {"email": widget.user.email}).then((response) {
       if (response.statusCode == 200 && response.body != "failed") {
         final jsonResponse = json.decode(response.body);
-       // print(response.body);
+        // print(response.body);
         User user = User.fromJson(jsonResponse);
         setState(() {
           widget.user.credit = user.credit;
@@ -560,5 +544,4 @@ class _NewProductPageState extends State<NewProductPage> {
       }
     });
   }
-
 }
