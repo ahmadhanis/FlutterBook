@@ -1,5 +1,5 @@
+import 'dart:convert';
 import 'dart:math';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mypasar/model/config.dart';
@@ -7,6 +7,9 @@ import 'package:mypasar/model/product.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
+import 'package:http/http.dart' as http;
+
+import '../model/user.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   final Product product;
@@ -19,7 +22,12 @@ class ProductDetailsPage extends StatefulWidget {
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
   late double screenHeight, screenWidth, resWidth;
   var pathAsset = "assets/images/camera.png";
-  //final String _phone = '';
+  var user;
+  @override
+  void initState() {
+    super.initState();
+    _loadOwner();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +93,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold)),
                           Text("RM " +
-                              double.parse(widget.product.productPrice.toString())
+                              double.parse(
+                                      widget.product.productPrice.toString())
                                   .toStringAsFixed(2)),
                         ]),
                         TableRow(children: [
@@ -106,7 +115,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                   fontSize: 16, fontWeight: FontWeight.bold)),
                           Text(widget.product.productLoc.toString()),
                         ]),
-                        
                         TableRow(children: [
                           const Text('Owner',
                               style: TextStyle(
@@ -173,24 +181,24 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   void _onCallDialog(int r) {
     switch (r) {
       case 1:
-       // _makePhoneCall(widget.product.user_phone.toString());
+        _makePhoneCall(user.phone.toString());
         break;
       case 2:
         //('2!');
-        //_sendSms(widget.product.user_phone.toString());
+        _sendSms(user.phone.toString());
         break;
       case 3:
-       // print('3');
+        // print('3');
         break;
       case 4:
         //print('4');
         break;
       case 5:
-       // print('5');
+        // print('5');
         _showMapDialogue();
         break;
       default:
-       // print('choose a different number!');
+      // print('choose a different number!');
     }
   }
 
@@ -276,5 +284,18 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
         );
       },
     );
+  }
+
+  void _loadOwner() {
+    http.post(Uri.parse(MyConfig.server + "/mypasar/php/load_user.php"),
+        body: {"email": widget.product.userEmail}).then((response) {
+      print(response.body);
+      var jsondata = jsonDecode(response.body);
+      if (response.statusCode == 200 && jsondata['status'] == 'success') {
+        setState(() {
+          user = User.fromJson(jsondata['data']);
+        });
+      }
+    });
   }
 }

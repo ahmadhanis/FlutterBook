@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -19,6 +18,8 @@ class TabPage1 extends StatefulWidget {
 
 class _TabPage1State extends State<TabPage1> {
   List productlist = [];
+  List<Product>? productList;
+
   String titlecenter = "Loading data...";
   late double screenHeight, screenWidth, resWidth;
   final df = DateFormat('dd/MM/yyyy hh:mm a');
@@ -142,6 +143,12 @@ class _TabPage1State extends State<TabPage1> {
       if (response.statusCode == 200 && jsondata['status'] == 'success') {
         print(response.body);
         var extractdata = jsondata['data'];
+        if (extractdata['products'] != null) {
+          productList = <Product>[];
+          extractdata['products'].forEach((v) {
+            productList!.add(Product.fromJson(v));
+          });
+        }
         setState(() {
           productlist = extractdata["products"];
           numprd = productlist.length;
@@ -173,7 +180,6 @@ class _TabPage1State extends State<TabPage1> {
       productDesc: productlist[index]['product_desc'],
       productPrice: productlist[index]['product_price'],
       productQty: productlist[index]['product_qty'],
-      
       productState: productlist[index]['product_state'],
       productLoc: productlist[index]['product_loc'],
       productLat: productlist[index]['product_lat'],

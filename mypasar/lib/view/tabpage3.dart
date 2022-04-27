@@ -26,7 +26,7 @@ class _TabPage3State extends State<TabPage3> {
   late double screenHeight, screenWidth, resWidth;
   File? _image;
   var pathAsset = "assets/images/profile.png";
-  final df = DateFormat('dd/MM/yyyy hh:mm a');
+  final df = DateFormat('dd/MM/yyyy');
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +135,8 @@ class _TabPage3State extends State<TabPage3> {
                                     ])
                                   : TableRow(children: [
                                       const Icon(Icons.date_range),
-                                      Text(widget.user.regdate.toString())
+                                      Text(df.format(DateTime.parse(
+                                          widget.user.regdate.toString())))
                                     ]),
                             ],
                           ),
@@ -393,12 +394,13 @@ class _TabPage3State extends State<TabPage3> {
         ));
     if (croppedFile != null) {
       _image = croppedFile;
-        _image = croppedFile;
+      _image = croppedFile;
       String base64Image = base64Encode(_image!.readAsBytesSync());
-      http.post(Uri.parse(MyConfig.server + "/mypasar/php/update_profile.php"), body: {
-        "image": base64Image,
-        "userid": widget.user.id
-      }).then((response) {
+      http.post(Uri.parse(MyConfig.server + "/mypasar/php/update_profile.php"),
+          body: {
+            "image": base64Image,
+            "userid": widget.user.id
+          }).then((response) {
         var data = jsonDecode(response.body);
         print(data);
         if (response.statusCode == 200 && data['status'] == 'success') {
@@ -425,7 +427,6 @@ class _TabPage3State extends State<TabPage3> {
       });
       setState(() {});
     }
-    
   }
 
   _updateProfileDialog(int i) {
@@ -467,13 +468,14 @@ class _TabPage3State extends State<TabPage3> {
               onPressed: () {
                 Navigator.of(context).pop();
                 http.post(
-                    Uri.parse(MyConfig.server + "/php/update_profile.php"),
+                    Uri.parse(
+                        MyConfig.server + "/mypasar/php/update_profile.php"),
                     body: {
                       "name": _nameeditingController.text,
                       "userid": widget.user.id
                     }).then((response) {
                   var data = jsonDecode(response.body);
-                //  print(data);
+                  //  print(data);
                   if (response.statusCode == 200 &&
                       data['status'] == 'success') {
                     Fluttertoast.showToast(
@@ -538,13 +540,14 @@ class _TabPage3State extends State<TabPage3> {
               onPressed: () {
                 Navigator.of(context).pop();
                 http.post(
-                    Uri.parse(MyConfig.server + "/mypasar/php/update_profile.php"),
+                    Uri.parse(
+                        MyConfig.server + "/mypasar/php/update_profile.php"),
                     body: {
                       "phone": _phoneeditingController.text,
                       "userid": widget.user.id
                     }).then((response) {
                   var data = jsonDecode(response.body);
-                 // print(data);
+                  // print(data);
                   if (response.statusCode == 200 &&
                       data['status'] == 'success') {
                     Fluttertoast.showToast(
@@ -662,13 +665,14 @@ class _TabPage3State extends State<TabPage3> {
                 }
                 Navigator.of(context).pop();
                 http.post(
-                    Uri.parse(MyConfig.server + "/php/update_profile.php"),
+                    Uri.parse(
+                        MyConfig.server + "/mypasar/php/update_profile.php"),
                     body: {
                       "password": _pass1editingController.text,
                       "userid": widget.user.id
                     }).then((response) {
                   var data = jsonDecode(response.body);
-                //  print(data);
+                  //  print(data);
                   if (response.statusCode == 200 &&
                       data['status'] == 'success') {
                     Fluttertoast.showToast(
@@ -712,11 +716,11 @@ class _TabPage3State extends State<TabPage3> {
             builder: (BuildContext context) => CreditPage(
                   user: widget.user,
                 )));
-                _loadNewCredit();
+    _loadNewCredit();
   }
 
   _loadNewCredit() {
-    http.post(Uri.parse(MyConfig.server + "/php/load_user.php"),
+    http.post(Uri.parse(MyConfig.server + "/mypasar/php/load_user.php"),
         body: {"email": widget.user.email}).then((response) {
       if (response.statusCode == 200 && response.body != "failed") {
         final jsonResponse = json.decode(response.body);
