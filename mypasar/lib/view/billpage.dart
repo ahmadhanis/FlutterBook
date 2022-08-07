@@ -48,7 +48,7 @@ class _BillPageState extends State<BillPage> {
           width: screenWidth,
           child: WebView(
             initialUrl: MyConfig.server +
-                'php/payment.php?email=' +
+                '/mypasar/php/payment.php?email=' +
                 widget.user.email.toString() +
                 '&mobile=' +
                 widget.user.phone.toString() +

@@ -422,6 +422,7 @@ class _RegisterPageState extends State<RegisterPage> {
           "password": _pass
         }).then((response) {
       var data = jsonDecode(response.body);
+      print(data);
       if (response.statusCode == 200 && data['status'] == 'success') {
         Fluttertoast.showToast(
             msg: "Registration Success",

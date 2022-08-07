@@ -52,7 +52,7 @@ class _NewProductPageState extends State<NewProductPage> {
   @override
   void initState() {
     super.initState();
-    _determinePermission();
+    _determinePosition();
   }
 
   @override
@@ -246,7 +246,6 @@ class _NewProductPageState extends State<NewProductPage> {
                             ],
                           ),
                           Row(children: [
-                            
                             Flexible(
                                 flex: 5,
                                 child: CheckboxListTile(
@@ -401,19 +400,20 @@ class _NewProductPageState extends State<NewProductPage> {
     progressDialog.show();
 
     String base64Image = base64Encode(_image!.readAsBytesSync());
-    http.post(Uri.parse(MyConfig.server + "/mypasar/php/new_product.php"), body: {
-      "pridowner": widget.user.id,
-      "premail": widget.user.email,
-      "prname": _prname,
-      "prdesc": _prdesc,
-      "prprice": _prprice,
-      "prqty": _prqty,
-      "prstate": _prstate,
-      "prloc": _prloc,
-      "prlat": prlat,
-      "prlong": prlong,
-      "image": base64Image,
-    }).then((response) {
+    http.post(Uri.parse(MyConfig.server + "/mypasar/php/new_product.php"),
+        body: {
+          "pridowner": widget.user.id,
+          "premail": widget.user.email,
+          "prname": _prname,
+          "prdesc": _prdesc,
+          "prprice": _prprice,
+          "prqty": _prqty,
+          "prstate": _prstate,
+          "prloc": _prloc,
+          "prlat": prlat,
+          "prlong": prlong,
+          "image": base64Image,
+        }).then((response) {
       print(response.body);
       var data = jsonDecode(response.body);
       if (response.statusCode == 200 && data['status'] == 'success') {
@@ -493,35 +493,9 @@ class _NewProductPageState extends State<NewProductPage> {
     }
   }
 
-  _determinePermission() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      Geolocator.openLocationSettings();
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        Geolocator.openLocationSettings();
-      } else {
-        Navigator.of(context).pop();
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      Geolocator.openLocationSettings();
-    }
-    _getLocation();
-  }
-
-  _getLocation() async {
-    _currentPosition = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    List<Placemark> placemarks = await placemarkFromCoordinates(
-        _currentPosition.latitude, _currentPosition.longitude);
+  _getAddress(Position pos) async {
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(pos.latitude, pos.longitude);
     setState(() {
       _prlocalEditingController.text = placemarks[0].locality.toString();
       _prstateEditingController.text =
@@ -543,5 +517,32 @@ class _NewProductPageState extends State<NewProductPage> {
         });
       }
     });
+  }
+
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+    _currentPosition = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    _getAddress(_currentPosition);
+    return _currentPosition;
   }
 }

@@ -18,7 +18,6 @@ class CreditPage extends StatefulWidget {
 class _CreditPageState extends State<CreditPage> {
   late double screenHeight, screenWidth, resWidth;
   final df = DateFormat('dd/MM/yyyy hh:mm a');
- // final bool _value = false;
   int val = -1;
   List<String> creditType = ["5", "10", "15", "20", "25", "50", "100", "1000"];
   String selectedValue = "5";

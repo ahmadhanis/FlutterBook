@@ -108,14 +108,16 @@ class _TabPage2State extends State<TabPage2> {
                                                         ['product_price'])
                                                     .toStringAsFixed(2) +
                                                 "  -  " +
-                                                productlist[index]['product_qty'] +
+                                                productlist[index]
+                                                    ['product_qty'] +
                                                 " in stock",
                                             style: TextStyle(
                                               fontSize: resWidth * 0.03,
                                             )),
                                         Text(
                                             df.format(DateTime.parse(
-                                                productlist[index]['product_date'])),
+                                                productlist[index]
+                                                    ['product_date'])),
                                             style: TextStyle(
                                               fontSize: resWidth * 0.03,
                                             ))
@@ -222,11 +224,10 @@ class _TabPage2State extends State<TabPage2> {
     }
     http.post(Uri.parse(MyConfig.server + "/mypasar/php/load_products.php"),
         body: {"email": widget.user.email}).then((response) {
-      var data = jsonDecode(response.body);
+      var jsondata = jsonDecode(response.body);
+      var extractdata = jsondata['data'];
       print(response.body);
-      if (response.statusCode == 200 && data['status'] == 'success') {
-        // print(response.body);
-        var extractdata = data['data'];
+      if (response.statusCode == 200 && jsondata['status'] == 'success') {
         setState(() {
           productlist = extractdata;
           numprd = productlist.length;

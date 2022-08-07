@@ -8,7 +8,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
-
 import '../model/user.dart';
 
 class ProductDetailsPage extends StatefulWidget {
@@ -22,11 +21,22 @@ class ProductDetailsPage extends StatefulWidget {
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
   late double screenHeight, screenWidth, resWidth;
   var pathAsset = "assets/images/camera.png";
-  var user;
+  User user = User(
+      address: "",
+      credit: "",
+      email: "",
+      id: "",
+      name: "",
+      otp: "",
+      regdate: "",
+      phone: "");
+
   @override
   void initState() {
     super.initState();
-    _loadOwner();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _loadOwner();
+    });
   }
 
   @override
@@ -44,6 +54,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       ),
       body: Column(
         children: [
+          //flex
           Flexible(
               flex: 4,
               child: Padding(
@@ -73,9 +84,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                   padding: const EdgeInsets.all(20),
                   child: SingleChildScrollView(
                     child: Table(
-                      //defaultColumnWidth: FixedColumnWidth(120.0),
-                      // border: TableBorder.all(
-                      //     color: Colors.black, style: BorderStyle.solid, width: 2,),
                       columnWidths: const {
                         0: FractionColumnWidth(0.3),
                         1: FractionColumnWidth(0.7)
@@ -119,7 +127,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                           const Text('Owner',
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold)),
-                          Text(widget.product.userEmail.toString()),
+                          user.email.toString().isEmpty
+                              ? const Text("")
+                              : Text(user.name.toString()),
                         ]),
                       ],
                     ),
@@ -207,6 +217,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       scheme: 'phone',
       path: phoneNumber,
     );
+    // ignore: deprecated_member_use
     await launch(launchUri.toString());
   }
 
@@ -247,7 +258,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
           title: widget.product.productName.toString(),
         ));
     markers[markerId] = marker;
-
+    //showdialog here
     showDialog(
       context: context,
       builder: (BuildContext context) {

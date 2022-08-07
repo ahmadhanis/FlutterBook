@@ -7,9 +7,9 @@ $name = $_GET['name'];
 $amount = $_GET['amount']; 
 $curcredit = $_GET['curcredit'];
 
-$api_key = '';
-$collection_id = '';
-$host = 'https://billplz-staging.herokuapp.com/api/v3/bills';
+$api_key = 'b47704d6-dd30-4143-a4b1-27eb88e8f906';
+$collection_id = 'wprsfj_3';
+$host = 'https://www.billplz-sandbox.com/api/v3/bills';
 
 
 $data = array(
@@ -19,8 +19,8 @@ $data = array(
           'name' => $name,
           'amount' => ($amount + 1) * 100, // RM20
 		  'description' => 'Payment for order by '.$name,
-          'callback_url' => "http://slumberjer.com/mypasarv2/return_url",
-          'redirect_url' => "http://slumberjer.com/mypasarv2/php/payment_update.php?userid=$email&mobile=$mobile&amount=$amount&curcredit=$curcredit" 
+          'callback_url' => "https://slumberjer.com/mypasar/return_url",
+          'redirect_url' => "https://slumberjer.com/mypasar/php/payment_update.php?name=$name&userid=$email&mobile=$mobile&amount=$amount&curcredit=$curcredit" 
 );
 
 

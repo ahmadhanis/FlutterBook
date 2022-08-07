@@ -135,8 +135,7 @@ class _TabPage3State extends State<TabPage3> {
                                     ])
                                   : TableRow(children: [
                                       const Icon(Icons.date_range),
-                                      Text(df.format(DateTime.parse(
-                                          widget.user.regdate.toString())))
+                                      Text(df.format(DateTime.now()))
                                     ]),
                             ],
                           ),
@@ -164,6 +163,7 @@ class _TabPage3State extends State<TabPage3> {
                           )),
                     ),
                   ),
+                  //Menu List Here
                   Expanded(
                       child: ListView(
                           padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
@@ -727,7 +727,7 @@ class _TabPage3State extends State<TabPage3> {
         //print(response.body);
         User user = User.fromJson(jsonResponse);
         setState(() {
-          widget.user.credit = user.credit;
+          
         });
       }
     });
